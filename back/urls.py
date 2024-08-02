@@ -36,4 +36,6 @@ urlpatterns = [
     path("get-goods/", views.get_goods, name="get-goods"),
     path("save-route/", views.save_route, name="save-route"),
     path("get-map-settings/", views.get_map_settings, name="get-map-settings"),
+    path("home-about/", views.home_about, name="home-about"),
+    path("home-contact/", views.home_contact, name="home-contact"),
 ]
