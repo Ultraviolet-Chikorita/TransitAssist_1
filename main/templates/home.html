@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div style="width:100vw;">
+        <div style="width:50%;height:400px;background-color: black;color:white">
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-info">Logout</button>
+            </form>
+        </div>
+    </div>>
+{% endblock %}
