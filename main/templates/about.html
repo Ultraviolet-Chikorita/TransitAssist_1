@@ -5,7 +5,7 @@
     body {
         color: #fff;
         font-family: "Work Sans", sans-serif;
-        background-image: url("{% static 'homeBg.png' %}");
+        background-image: url("{% static 'aboutBg.png' %}");
         background-size: cover;
         background-repeat: no-repeat;
         background-color: black; margin: 0;padding: 0;
@@ -41,44 +41,9 @@
         text-decoration: none;
         font-weight: bold;
     }
-
-    .button-container {
-        display: flex;
-        gap: 40px; /* Adjust gap as needed */
-        width:100%;
-        margin-top: 30px;
-    }
-
-    .sign-up,
-    .log-in {
-        width: 100%;
-        text-align: center;
-    }
-
-    .sign-up-parent,
-    .log-in-parent {
-        width: 20%;
-        position: relative;
-        box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset;
-        border-radius: 30px;
-        background-color: #000;
-        border: 1px solid rgba(255, 255, 255, 0.236);
-        box-sizing: border-box;
-        height: 43px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 0;
-        text-align: left;
-        font-size: 16px;
-        color: #fff;
-        cursor:pointer;
-    }
 </style>
-
 <div style="height: 10vh; margin: 0; width: 100%; display: flex; align-items: center; justify-content: center;">
-    <!-- <img src="./arrowup.png" style="height: 20%;"> -->
+    <img src="{% static 'arrowup.png' %}" style="height: 20%;">
 </div>
 <div style="height: 10vh; margin: 0; width: 100%; display: flex; align-items: center;">
     <nav>
@@ -92,16 +57,9 @@
 </div>
 <div style="height: 70vh; margin: 0; width: 100%; display: flex; align-items: center;">
     <div style="text-align: left; margin-left: 40px;">
-        <h1 style="font-size: 100px; margin-bottom: 0; margin-left: 0;">Navigate without worry</h1>
-        <p style="margin-left: 6px;">From selecting for low floor buses to wheelchair accessible routes, TransitAssist allows you to plan transportation routes for accessibility.</p>
-        <div class="button-container">
-            <div class="sign-up-parent">
-                <div class="sign-up">Sign Up</div>
-            </div>
-            <div class="log-in-parent">
-                <div onclick="goToLogin()" class="log-in">Log In</div>
-            </div>
-        </div>
+        <h1 style="font-size: 100px; margin-bottom: 0; margin-left: 0;">About</h1>
+        <p style="margin-left: 6px;">TransitAssist is a web app that is dedicated to making public transportation easier to navigate for those with disabilities.<br/>It provides real-time updates, accessible route planning, and user-friendly features to ensure a smooth and efficient travel experience.</p>
+        
     </div>
 </div>
 <div style="height: 10vh; margin: 0; width: 100%; display: flex; align-items: center; justify-content: center;">
@@ -109,14 +67,13 @@
 </div>
 
 <script>
-    function goToLogin(){
-        window.location.href = "{% url 'login' %}";
-    }
-
     document.addEventListener('keydown', (event) => {
         switch(event.key){
+            case 'ArrowUp':
+                document.getElementById("home_link").click();
+                break;
             case 'ArrowDown':
-                document.getElementById("about_link").click();
+                document.getElementById("contact_link").click();
                 break;
         }
     });

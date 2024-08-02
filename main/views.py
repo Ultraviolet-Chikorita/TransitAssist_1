@@ -221,7 +221,6 @@ def get_map_settings(request):
         autosave = mapsettings.autosave
         return JsonResponse({"status": "OK", "challenge": challenge, "accessibility": accessibility, "autosave": autosave})
 
-@login_required
 def home(request):
     if request.user.is_authenticated:
         CustomUser = get_user_model()
@@ -241,4 +240,10 @@ def home(request):
         accessibility = mapsettings.accessibility
         autosave = mapsettings.autosave
         return render(request, "dashloggedin.html", {'firstname': firstname, 'lastname': lastname, 'phone': phonenumber, 'email': email, 'floors': floors, 'wheels': wheels, 'animals': animals, 'braille': braille, 'elevators': elevators, 'challenge': challenge, 'accessibility': accessibility, 'autosave': autosave})
-    return redirect('login')
+    return render(request, "home.html")
+
+def home_about(request):
+    return render(request, "about.html")
+
+def home_contact(request):
+    return render(request, "contact.html")
