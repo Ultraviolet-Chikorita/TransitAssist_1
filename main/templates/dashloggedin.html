@@ -519,14 +519,26 @@
                     CONTACT<br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;--
                 </div>
-                <div id="navigate">
-                    <div style="padding:20px;display:flex;flex-direction: column;">
+                <div id="navigate" style="overflow-y: scroll;">
+                    <h1>Most recent journey</h1>
+                    <div style="margin-top:20px;padding:20px;display:flex;flex-direction: row;width:90%;border: 1px solid rgba(255,255,255,0.15);height:4vh;align-items:center;border-radius:20px;background-color:rgba(0,0,0,0.1)">
                         <div>
                             <img src="{% static 'globe.png' %}" style="height:40px;"/>
                         </div>
-                        <div style="display:flex;margin-left: 10px;flex-direction: row;">
-                            Hello<br/>World    
+                        {% if route.start != "" %}
+                            <div style="display:flex;margin-left: 20px;flex-direction: row;">
+                                <b>{{route.end}}</b>
+                                <span>{{route.date}}</span>  
+                            </div>
+                            <div style="display:flex;margin-left: 20px;flex-direction: row;">
+                                <span style="color:#b7b7b7">Starting Location</span>
+                                <b>{{route.start}}</b>
+                            </div>
+                        {% else %}
+                        <div style="display:flex;margin-left: 20px;flex-direction: row;color:#b7b7b7">
+                            <i>No routes yet</i>
                         </div>
+                        {% endif %}
 
                     </div>
                 </div>

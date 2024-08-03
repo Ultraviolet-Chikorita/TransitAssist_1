@@ -249,7 +249,16 @@ def home(request):
         challenge = mapsettings.challenge
         accessibility = mapsettings.accessibility
         autosave = mapsettings.autosave
-        return render(request, "dashloggedin.html", {'firstname': firstname, 'lastname': lastname, 'phone': phonenumber, 'email': email, 'floors': floors, 'wheels': wheels, 'animals': animals, 'braille': braille, 'elevators': elevators, 'challenge': challenge, 'accessibility': accessibility, 'autosave': autosave})
+        savedRoutes = list(user.routes.filter(saved=True))
+        processedSavedRoutes = []
+        for route in savedRoutes:
+            processedSavedRoutes.append({"start": route.start, "end": route.end, "date": route.time.strftime("%d/%m/%Y")})
+        try:
+            unsavedRoute = user.routes.all()[0]
+            processedRoute = {"start": unsavedRoute.start, "end": unsavedRoute.end, "date":unsavedRoute.time.strftime("%d/%m/%Y")}
+        except:
+            processedRoute = {"start": ""}
+        return render(request, "dashloggedin.html", {'route': processedRoute, 'savedroutes': processedSavedRoutes ,'firstname': firstname, 'lastname': lastname, 'phone': phonenumber, 'email': email, 'floors': floors, 'wheels': wheels, 'animals': animals, 'braille': braille, 'elevators': elevators, 'challenge': challenge, 'accessibility': accessibility, 'autosave': autosave})
     return render(request, "home.html")
 
 def home_about(request):
