@@ -49,6 +49,16 @@ def signup(request):
         mapsettings.save()
         return redirect('login')
 
+def get_saved_routes(request):
+    if request.method == "POST":
+        CustomUser = get_user_model()
+        user = CustomUser.objects.filter(id=request.user.id)[0]
+        savedRoutes = list(user.routes.filter(saved=True))
+        processedSavedRoutes = []
+        for route in savedRoutes:
+            processedSavedRoutes.append({"start": route.start, "end": route.end, "date": route.time.strftime("%d/%m/%Y")})
+        return JsonResponse({"status": "OK", "routes": processedSavedRoutes})
+
 
 def update_user_details(request):
     if request.method == "POST":

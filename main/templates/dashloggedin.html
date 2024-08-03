@@ -1,758 +1,535 @@
-{% extends 'base.html' %}
-{% block body %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            color: #fff;
+            font-family: "Work Sans", sans-serif;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: black;
+            margin: 0;
+            padding: 0;
+        }
 
-<style>
-    gmp-place-autocomplete {
-  width: 80%;
-}
+        nav {
+            position: absolute;
+            left: 80px;
+            height: 5vh;
+            display: flex;
+            align-items: center;
+        }
 
-#infowindow-content .title {
-  font-weight: bold;
-}
+        nav .logo {
+            width: 100px;
+            height: 100px;
+            background: url("{% static 'logo.png' %}") no-repeat center center;
+            background-size: contain;
+        }
 
-#map #infowindow-content {
-  display: inline;
-}
-</style>
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
 
-<div id="responseText" style="width:100%;height:20px;"></div>
-<form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-info">Logout</button>
-</form>
+        nav ul li {
+            display: inline;
+        }
 
-    <button id="to_navigate" class="btn btn-info">nagivate</button>
-    <button id="to_account" class="btn btn-info">account</button>
-    <button id="to_about" class="btn btn-info">about</button>
-    <button id="to_contact" class="btn btn-info">contact</button><br/>
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    <div id="navigate" style="width:100%;height:70vh;display:flex;">
-        <div id="leftpart" style="width:30%;height:100%;float:left;">
-            <div class="topLeft1" id="topLeft1" style="background-color: #fff; border-radius: 5px 0px 5px 0px; margin: 0px; padding: 5px; font-family: Roboto, sans-serif; font-size: large; font-weight: bold; height: 30%; width: 100%;border:1px solid black;border-bottom:0px;">
-                <p>Search for a place here:</p>
-                <button id="generate-routes" class="btn btn-primary">Generate Routes</button>
+        
+
+        .logoutbtn {
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+
+        .logoutbtn-parent {
+            width: 90px;
+            position: relative;
+            border-radius: 10px;
+            background-color: #000;
+            box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset;
+            border: 1px solid rgba(255, 255, 255, 0.236);
+            box-sizing: border-box;
+            height: 43px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            text-align: left;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .main-content {
+            height: 90vh;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            box-shadow: 10px 10px 50px rgba(255, 255, 255, 0.02) inset, 50px 50px 75px rgba(77, 36, 243, 0.1) inset, 3px 4px 4.7px rgba(58, 49, 94, 0.2) inset;
+            background-color: rgba(255, 255, 255, 0.04);
+            height: 100%;
+            margin: 0;
+            width: 15%;
+        }
+
+        .sidebar .menu-header,
+        .sidebar .menu-item {
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+
+        .sidebar .menu-header {
+            margin-top: 40px;
+            padding: 10px;
+            border-bottom: 1px solid rgb(48, 48, 48);
+            color: #b7b7b7;
+        }
+
+        .sidebar .menu-item {
+            margin-top: 20px;
+            padding: 10px;
+            color: #b7b7b7;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .content {
+            height: 100%;
+            width: 85%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-holder {
+            height: 90%;
+            width: 90%;
+            border-radius: 30px;
+            background-color: #121017;
+            display: flex;
+            align-items: center;
+        }
+
+        #account,
+        #about,
+        #contact,
+        #navigate {
+            width: 100%;
+            height: 90%;
+            display: flex;
+        }
+
+        #account_nav {
+            height: 100%;
+            width: 25%;
+            border-right: 1px solid rgb(48, 48, 48);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #account_nav button {
+            width: 80%;
+            font-size: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            border: none;
+            background-color: #121017;
+            color: #b7b7b7;
+            cursor: pointer;
+        }
+
+        #account_content {
+            height: 100%;
+            width: 75%;
+            margin: 0;
+            padding: 0;
+            display:flex;
+        }
+
+        .input-container{
+            position:relative;
+            margin-bottom:20px;
+            font-size: 30px;
+        }
+        .input-container label{
+            position:absolute;
+            top:-20px;
+            left:0px;
+            color:#cbcbcb;
+            transition: all 0.5s ease-in-out;
+            font-size:20px;
+        }
+        .input-container input{ 
+        border:0;
+        border-bottom:1px solid #2b2b2b;  
+        background:transparent;
+        width:100%;
+        padding:8px 0 5px 0;
+        color:#fff;
+        font-size: 30px;
+        }
+        .input-container input:focus{ 
+        border:none;	
+        outline:none;
+        border-bottom:1px solid #7D40FF;	
+        }
+
+        .form-control {
+            line-height: 1.1;
+            display: grid;
+            grid-template-columns: 1em auto;
+            gap: 0.5em;
+        }
+
+        
+
+        input[type="checkbox"] {
+            /* Add if not using autoprefixer */
+            -webkit-appearance: none;
+            /* Remove most all native input styles */
+            appearance: none;
+            /* For iOS < 15 */
+            background-color: #18151E;
+            /* Not removed via appearance */
+            margin: 0;
+
+            font: inherit;
+            color: #7D40FF;
+            width: 1.15em;
+            height: 1.15em;
+            border: 0.15em solid rgba(255, 255, 255, 0.5);
+            border-radius: 0.15em;
+            transform: translateY(-0.075em);
+
+            display: grid;
+            place-content: center;
+            cursor:pointer;
+        }
+
+        input[type="checkbox"]::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+            transform: scale(0);
+            transform-origin: bottom left;
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #7D40FF;
+            /* Windows High Contrast Mode */
+            background-color: CanvasText;
+        }
+
+        input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        input[type="checkbox"]:focus {
+            outline: max(2px, 0.15em) solid #7D40FF;
+            outline-offset: max(2px, 0.15em);
+        }
+
+        /* #account_content > div {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        } */
+
+    </style>
+</head>
+<body>
+    <div style="height: 10vh; margin: 0; width: 100%; display: flex; align-items: center; background-color: #0a0a0a;">
+        <nav>
+            <div class="logo"></div>
+            <h1 style="font-size: 60px;">TransitAssist</h1>
+        </nav>
+        <div style="margin-left:auto;margin-right:80px;height:5vh;display:flex;align-items:center;">
+            <form id="logoutForm" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <div class="logoutbtn-parent">
+                    <div class="logoutbtn" onclick="document.getElementById('logoutForm').submit()">
+                        <div>Logout</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="menu-header">
+                <p><b>MENU</b></p>
             </div>
-            <div id="route-list-container" class="topLeft1" style="background-color: rgb(255, 255, 255); margin: 0px; border-radius: 0px 5px 0px 0px; padding: 5px; font-family: Roboto, sans-serif; font-size: small; overflow: scroll; height: 70%; width: 100%;border-left: 1px solid black;border-right: 1px solid black;border-bottom: 1px solid black;">
-                <p>Input places above</p>
+            <div class="menu-item" id="to_navigate">Navigate</div>
+            <div class="menu-item" id="to_account">Account Settings</div>
+            <div class="menu-item" id="to_about">About</div>
+            <div class="menu-item" id="to_contact">Contact</div>
+        </div>
+        <div class="content">
+            <div class="content-holder">
+                <div id="account">
+                    <div id="account_nav">
+                        <button id="to_profile">My Profile</button>
+                        <button id="to_prefs">Preferences</button>
+                        <button id="to_mapsettings">Map Settings</button>
+                    </div>
+                    <div id="account_content">
+                        <div id="profile">
+                            <div style="font-size: 18px;margin-left: 80px;margin-right: 80px;margin-top: 20px;">
+                                <b style="font-size: 25px">My Profile</b><br/><br/><br/>
+                                <div style="display:flex;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:20px;">
+                                    <div style="display:flex;flex-direction: row;margin-bottom: 30px;">
+                                        <div style="width:45%;padding:20px;padding-bottom: 0px;padding-top:30px;">
+                                            <div class="input-container">
+                                                <input id="firstname" type="text" required="" value="{{firstname}}"/>
+                                                <label>First Name</label>		
+                                            </div>
+                                        </div>
+                                        <div style="width:45%;padding:20px;padding-bottom: 0px;padding-top:30px;margin-left: auto;">
+                                            <div class="input-container">
+                                                <input id="lastname" type="text" required="" value="{{lastname}}"/>
+                                                <label>Last Name</label>		
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex;flex-direction: row;margin-bottom: 30px;">
+                                        <div style="width:45%;padding:20px;padding-bottom: 0px;padding-top:30px;">
+                                            <div class="input-container">
+                                                <input id="email" type="email" required="" readonly value="{{email}}"/>
+                                                <label>Email</label>		
+                                            </div>
+                                        </div>
+                                        <div style="width:45%;padding:20px;padding-bottom: 0px;padding-top:30px;margin-left: auto;">
+                                            <div class="input-container">
+                                                <input id="phone" type="text" required="" value="{{phone}}"/>
+                                                <label>Phone Number</label>		
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="btn-update-user-details" class="logoutbtn-parent" style="margin-left:auto;margin-top:30px">
+                                    <div class="logoutbtn">
+                                        <div>Confirm</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="prefs">
+                            <div style="font-size: 18px;margin-left: 80px;margin-right: 80px;margin-top: 20px; color: rgba(255, 255, 255, 0.5)">
+                                <b style="font-size: 25px; color:white;">Preferences</b><br/><br/><br/>
+                                {% if floors %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="lowfloorbuses" checked/>
+                                            Low Floor Buses
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="lowfloorbuses" />
+                                            Low Floor Buses
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if wheels %}
+                                <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                    <label class="form-control" style="font-size: 25px;">
+                                        <input type="checkbox" id="wheelchair" checked/>
+                                        Wheelchair Ramps and Lifts
+                                    </label>
+                                </div>
+                                {% else %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="wheelchair" />
+                                            Wheelchair Ramps and Lifts
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if animals %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="serviceanimal" checked/>
+                                            Service Animal Friendly
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="serviceanimal" />
+                                            Service Animal Friendly
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if braille %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="braille" checked/>
+                                            Braille and Large Print Signage
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="braille" />
+                                            Braille and Large Print Signage
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if elevators %}
+                                    <div style="display:flex;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="elevators" checked/>
+                                            Elevators and Escalators
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <div style="display:flex;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="elevators"/>
+                                            Elevators and Escalators
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                <div id="btn-update-preferences" class="logoutbtn-parent" style="margin-left:auto;margin-top:30px">
+                                    <div class="logoutbtn">
+                                        <div>Confirm</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="mapsettings">
+                            <div style="font-size: 18px;margin-left: 80px;margin-right: 80px;margin-top: 20px; color: rgba(255, 255, 255, 0.5)">
+                                <b style="font-size: 25px; color:white;">Preferences</b><br/><br/><br/>
+                                {% if challenge %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="challenge" checked/>
+                                            Make more challenging routes redder
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="challenge" />
+                                            Make more challenging routes redder
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if accessibility %}
+                                <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                    <label class="form-control" style="font-size: 25px;">
+                                        <input type="checkbox" id="accessibility" checked/>
+                                        Prioritize accessibility over time
+                                    </label>
+                                </div>
+                                {% else %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="accessibility" />
+                                            Prioritize accessibility over time
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if autosave %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #282530;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="autosave" checked/>
+                                            Auto-save each route to your history
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <div style="display:flex;margin-bottom:30px;flex-direction: column;background-color: #18151E;border:1px solid rgba(255,255,255,0.05);padding:30px;border-radius:20px;justify-content: center;">
+                                        <label class="form-control" style="font-size: 25px;">
+                                            <input type="checkbox" id="autosave" />
+                                            Auto-save each route to your history
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                
+                                <div id="btn-update-mapsettings" class="logoutbtn-parent" style="margin-left:auto;margin-top:30px">
+                                    <div class="logoutbtn">
+                                        <div>Update</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="about">
+                    ABOUT<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;--<br/>
+                </div>
+                <div id="contact">
+                    CONTACT<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;--
+                </div>
+                <div id="navigate">
+                    NAVIGATE<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;--
+                </div>
             </div>
-            <div id="route-info-container" class="topLeft1" style="display:none; background-color: rgb(255, 255, 255); border-radius: 0px 5px 0px 0px; margin: 0px; padding: 5px; font-family: Roboto, sans-serif; font-size: small; overflow: scroll; height: 70%; width: 100%;border-left: 1px solid black;border-right: 1px solid black;border-bottom: 1px solid black;">
-                <p>Route info</p>
-            </div>
-        </div>
-        <div id="rightpart" style="width:70%;height:100%;margin:0;float:right;">
-            <div id="map" style="height:100%;border-radius: 5px;border:1px solid black;"></div>
         </div>
     </div>
-    
-    <div id="account">
-        ACCOUNT SETTINGS<br/>
-        <button id="to_profile" class="btn btn-info">profile</button>
-        <button id="to_prefs" class="btn btn-info">preferences</button>
-        <button id="to_mapsettings" class="btn btn-info">map settings</button><br/>
-        <div id="profile">
-            &nbsp;&nbsp;&nbsp;&nbsp;MY PROFILE<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="firstname" value="{{firstname}}" name="firstname" type="text" placeholder="First name"/>
-                    <input id="lastname" value="{{lastname}}" name="lastname" type="text" placeholder="Last name"/>
-                    <input id="email" value="{{email}}" name="email" type="email" placeholder="Email" readonly/>
-                    <input id="phone" value="{{phone}}" name="phone" type="text" placeholder="Phone number, format +'COUNTRYCODE''NUMBER'"/>
-                    <button id="btn-update-user-details" class="btn btn-info">UPDATE</button><br/>
-        </div>
-        <div id="prefs">
-            &nbsp;&nbsp;&nbsp;&nbsp;PREFERENCES<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if floors %}
-                        <input type="checkbox" name="lowfloorbuses" id="lowfloorbuses" value="lowfloorbuses" checked>
-                    {% else %}
-                        <input type="checkbox" name="lowfloorbuses" id="lowfloorbuses" value="lowfloorbuses">
-                    {% endif %}
-                    <label for="lowfloorbuses"> Low Floor Buses</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if wheels %}
-                        <input type="checkbox" name="wheelchair" id="wheelchair" value="wheelchair" checked>
-                    {% else %}
-                        <input type="checkbox" name="wheelchair" id="wheelchair" value="wheelchair">
-                    {% endif %}
-                    <label for="wheelchair"> Wheelchair Ramps and Lifts</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if animals %}
-                        <input type="checkbox" name="serviceanimal" id="serviceanimal" value="serviceanimal" checked>
-                    {% else %}
-                        <input type="checkbox" name="serviceanimal" id="serviceanimal" value="serviceanimal">
-                    {% endif %}
-                    <label for="serviceanimal"> Service Animal Friendly</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if braille %}
-                        <input type="checkbox" name="braille" id="braille" value="braille" checked>
-                    {% else %}
-                        <input type="checkbox" name="braille" id="braille" value="braille">
-                    {% endif %}
-                    <label for="braille"> Braille and Large Print Signage</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if elevators %}
-                        <input type="checkbox" name="elevators" id="elevators" value="elevators" checked>
-                    {% else %}
-                        <input type="checkbox" name="elevators" id="elevators" value="elevators">
-                    {% endif %}
-                    <label for="elevators"> Elevators and Escalators</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button id="btn-update-preferences" class="btn btn-info">UPDATE</button><br/>
-        </div>
-        <div id="mapsettings">
-            &nbsp;&nbsp;&nbsp;&nbsp;MAP SETTINGS<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if challenge %}
-                        <input type="checkbox" name="challenge" id="challenge" value="challenge" checked>
-                    {% else %}
-                        <input type="checkbox" name="challenge" id="challenge" value="challenge">
-                    {% endif %}
-                    <label for="challenge"> Make more challenging routes redder</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if accessibility %}
-                        <input type="checkbox" name="accessibility" id="accessibility" value="accessibility" checked>
-                    {% else %}
-                        <input type="checkbox" name="accessibility" id="accessibility" value="accessibility">
-                    {% endif %}
-                    <label for="accessibility"> Prioritize accessibility over time</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% if autosave %}
-                        <input type="checkbox" name="autosave" id="autosave" value="autosave" checked>
-                    {% else %}
-                        <input type="checkbox" name="autosave" id="autosave" value="autosave">
-                    {% endif %}
-                    <label for="autosave"> Auto-save each route to your history</label><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button id="btn-update-mapsettings" class="btn btn-info">UPDATE</button><br/>
-        </div>
-    </div>
-    <div id="about">
-        ABOUT<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;--<br/>
-    </div>
-    <div id="contact">
-        CONTACT<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;--
-    </div>
-
-    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyCbZ2QUNhC61wdGwvKkjyTV4M3KkEKtX_E", v: "beta"});</script>
-
     <script>
-        let challenge = false;
-        let accessibility = false;
-        let autosave = false;
 
-        function generateHexColor(x, y) {
-            var hexColor = "#000000";
-            if(challenge){
-                if (y === 0) {
-                    throw new Error("y cannot be zero");
-                }
-
-                // Calculate the ratio
-                let ratio = x / y;
-
-                // Clamp the ratio between 0 and 1
-                ratio = Math.max(0, Math.min(1, ratio));
-
-                // Calculate the red and green components
-                const red = Math.round(255 * ratio);
-                const green = Math.round(255 * (1 - ratio));
-
-                // Convert to hex and pad with zeroes if necessary
-                const redHex = red.toString(16).padStart(2, '0');
-                const greenHex = green.toString(16).padStart(2, '0');
-
-                // Construct the hex color
-                hexColor = `#${redHex}${greenHex}00`;
-            }
-            return hexColor;
+        function handleCheckboxToggle(event) {
+            const checkbox = event.target;
+            const parentOfParent = checkbox.parentElement.parentElement;
+            parentOfParent.style.backgroundColor = checkbox.checked ? '#282530' : '#18151E';
         }
 
-        async function reportIssueTransit(sp){
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
-            console.log(sp);
-            let problem = prompt("Report an accessibility issue", "No escalator access");
-            if (problem == null || problem == "") {
-            } else {
-                console.log("Accessibility issue: " + problem);
-                const response3 = await fetch("add-issue/", {
-                    method: "POST",
-                    cache: "no-cache",
-                    headers: {
-                        "Content-Type": "application/json",
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({"places": [sp.dataset.name], "issue": problem}),
-                });
-                const result3 = await response3.json();
-                console.log(result3);
-            }
-        }
-        document.addEventListener('DOMContentLoaded', async () => {
-
-            let map;
-            let marker1;
-            let marker2;
-            let infoWindow1;
-            let infoWindow2;
-            let place1 = null;
-            let place2 = null;
-            let directionsService;
-            let directionsRenderer;
-            let routes = [];
-            let curr_route_accessibility_check = [];
-            let route_accessibility_check = [];
-            let curr_numIssues = [];
-            let numIssues = [];
-            let curr_numGoods = [];
-            let numGoods = [];
-            let first;
-            let second;
-
-            const response99 = await fetch("get-map-settings/", {
-                method: "POST",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({}),
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', handleCheckboxToggle);
             });
-            const result99 = await response99.json();
-            challenge = result99["challenge"];
-            accessibility = result99["accessibility"];
-            autosave = result99["autosave"];
 
-            async function initMap() {
-                // Request needed libraries.
-                //@ts-ignore
-                const [{ Map }, { AdvancedMarkerElement }, { Geometry }] = await Promise.all([
-                    google.maps.importLibrary("maps"),
-                    google.maps.importLibrary("marker"),
-                    google.maps.importLibrary("places"),
-                    google.maps.importLibrary("geometry"),
-                ]);
-
-                directionsService = new google.maps.DirectionsService();
-                directionsRenderer = new google.maps.DirectionsRenderer();
-
-                // Initialize the map.
-                map = new google.maps.Map(document.getElementById("map"), {
-                    center: { lat: 40.749933, lng: -73.98633 },
-                    zoom: 13,
-                    mapId: "4504f8b37365c3d0",
-                    mapTypeControl: false,
-                });
-
-                directionsRenderer.setMap(map);
-
-                //@ts-ignore
-                const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
-                //@ts-ignore
-                placeAutocomplete.id = "place-autocomplete-input";
-                const card = document.getElementById("topLeft1");
-
-                placeAutocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
-                    await place.fetchFields({
-                        fields: ["displayName", "formattedAddress", "location"],
-                    });
-                    first = place.toJSON()["displayName"];
-                });
-
-
-                //@ts-ignore
-                card.appendChild(placeAutocomplete);
-
-                //@ts-ignore
-                const placeAutocomplete2 = new google.maps.places.PlaceAutocompleteElement();
-                //@ts-ignore
-                placeAutocomplete2.id = "place-autocomplete-input2";
-
-                placeAutocomplete2.addEventListener("gmp-placeselect", async ({ place }) => {
-                    await place.fetchFields({
-                        fields: ["displayName", "formattedAddress", "location"],
-                    });
-                    second = place.toJSON()["displayName"];
-                });
-                //@ts-ignore
-                card.appendChild(placeAutocomplete2);
-
-                // Create the markers and infowindows
-                marker1 = new google.maps.marker.AdvancedMarkerElement({
-                    map,
-                });
-                marker2 = new google.maps.marker.AdvancedMarkerElement({
-                    map,
-                });
-
-                infoWindow1 = new google.maps.InfoWindow({});
-                infoWindow2 = new google.maps.InfoWindow({});
-
-                // Add the gmp-placeselect listener, and display the results on the map.
-                //@ts-ignore
-                placeAutocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
-                    await place.fetchFields({
-                        fields: ["displayName", "formattedAddress", "location"],
-                    });
-                    place1 = place;
-                    updateMapAndMarkers();
-                });
-
-                //@ts-ignore
-                placeAutocomplete2.addEventListener("gmp-placeselect", async ({ place }) => {
-                    await place.fetchFields({
-                        fields: ["displayName", "formattedAddress", "location"],
-                    });
-                    place2 = place;
-                    updateMapAndMarkers();
-                });
-            }
-
-            // Helper function to update the map and markers.
-            function updateMapAndMarkers() {
-                if (place1 && place1.location) {
-                    let content1 =
-                        '<div id="infowindow-content">' +
-                        '<span id="place-displayname" class="title">' +
-                        place1.displayName +
-                        "</span><br />" +
-                        '<span id="place-address">' +
-                        place1.formattedAddress +
-                        "</span>" +
-                        "</div>";
-                    updateInfoWindow(infoWindow1, content1, place1.location, marker1);
-                    marker1.position = place1.location;
-                }
-
-                if (place2 && place2.location) {
-                    let content2 =
-                        '<div id="infowindow-content">' +
-                        '<span id="place-displayname" class="title">' +
-                        place2.displayName +
-                        "</span><br />" +
-                        '<span id="place-address">' +
-                        place2.formattedAddress +
-                        "</span>" +
-                        "</div>";
-                    updateInfoWindow(infoWindow2, content2, place2.location, marker2);
-                    marker2.position = place2.location;
-                }
-
-                // Adjust the map to fit both markers if both places are selected.
-                if (place1 && place2) {
-                    const bounds = new google.maps.LatLngBounds();
-                    bounds.extend(place1.location);
-                    bounds.extend(place2.location);
-                    map.fitBounds(bounds);
-                } else if (place1) {
-                    map.setCenter(place1.location);
-                    map.setZoom(17);
-                } else if (place2) {
-                    map.setCenter(place2.location);
-                    map.setZoom(17);
-                }
-            }
-
-            // Helper function to create an info window.
-            function updateInfoWindow(infoWindow, content, center, marker) {
-                infoWindow.setContent(content);
-                infoWindow.setPosition(center);
-                infoWindow.open({
-                    map,
-                    anchor: marker,
-                    shouldFocus: false,
-                });
-            }
-
-            async function generateRoutes() {
-                if (!place1 || !place2) {
-                    alert("Please select two places to generate routes.");
-                    return;
-                }
-
-                const response199 = await fetch("get-map-settings/", {
-                    method: "POST",
-                    cache: "no-cache",
-                    headers: {
-                        "Content-Type": "application/json",
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({}),
-                });
-                const result199 = await response199.json();
-                challenge = result199["challenge"];
-                accessibility = result199["accessibility"];
-                autosave = result199["autosave"];
-
-                curr_route_accessibility_check = [];
-                route_accessibility_check = [];
-                curr_numIssues = [];
-                numIssues = [];
-
-
-                let request = {
-                    origin: place1.location,
-                    destination: place2.location,
-                    travelMode: 'TRANSIT',
-                    provideRouteAlternatives: true,
-                    transitOptions: {
-                        routingPreference: 'LESS_WALKING'
-                    }
-                };
-                console.log(place1);
-                console.log(place1.location);
-
-                directionsService.route(request, async function(result, status) {
-                    if (status == 'OK') {
-                        const response = await fetch("save-route/", {
-                            method: "POST",
-                            cache: "no-cache",
-                            headers: {
-                                "Content-Type": "application/json",
-                                'X-CSRFToken': '{{ csrf_token }}'
-                            },
-                            body: JSON.stringify({"start": first, "end": second}),
-                        });
-                        const result2 = await response.json();
-                        console.log(result2);
-                        displayRoutes(result);
-                    } else {
-                        alert('Could not generate routes: ' + status);
-                    }
-                });
-
-            }
-
-            async function displayRoutes(result) {
-                try {
-                    map.directionsRenderers.forEach((r, i) => {
-                        r.setMap(null);
-                    });
-                    map.directionsRenderers = [];
-                } catch {
-                    map.directionsRenderers = [];
-                }
-                console.log(map.directionsRenderers);
-                routes = [];
-
-                // Define colors for routes
-                const routeColors = ['#0000FF', '#FF0000', '#00FF00', '#FF00FF'];
-
-                // Create the route list container
-                let routeListContainer = document.getElementById('route-list-container');
-                routeListContainer.innerHTML = ''; // Clear previous routes
-
-                // Create an array to store the route items
-                let routeItems = [];
-
-                // Display each route with a different color and list them in the container
-                console.log(result.routes);
-                for (const [index, route] of result.routes.entries()) {
-                    const renderer = new google.maps.DirectionsRenderer({
-                        map: map,
-                        directions: result,
-                        routeIndex: index, // Specify the route index to display
-                        polylineOptions: {
-                            strokeColor: routeColors[index % routeColors.length], // Cycle through colors
-                            strokeOpacity: 0.7,
-                            strokeWeight: 5
-                        },
-                        suppressMarkers: true // Suppress default markers
-                    });
-
-                    // Store the renderer
-                    map.directionsRenderers.push(renderer);
-                    routes.push(route);
-
-                    curr_route_accessibility_check = [];
-                    curr_numIssues = [];
-                    curr_numGoods = [];
-                    for (const step of route.legs[0].steps) {
-                        if (step.travel_mode === "TRANSIT") {
-                            const stop0 = step.transit.departure_stop.name + " ||| " + step.transit.line.agencies[0].name;
-                            const stop1 = step.transit.arrival_stop.name + " ||| " + step.transit.line.agencies[0].name;
-                            const response3 = await fetch("get-issues/", {
-                                method: "POST",
-                                cache: "no-cache",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    'X-CSRFToken': '{{ csrf_token }}'
-                                },
-                                body: JSON.stringify({"places": [stop0]}),
-                            });
-                            const result3 = await response3.json();
-                            const response4 = await fetch("get-issues/", {
-                                method: "POST",
-                                cache: "no-cache",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    'X-CSRFToken': '{{ csrf_token }}'
-                                },
-                                body: JSON.stringify({"places": [stop1]}),
-                            });
-                            const result4 = await response4.json();
-                            const response5 = await fetch("get-goods/", {
-                                method: "POST",
-                                cache: "no-cache",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    'X-CSRFToken': '{{ csrf_token }}'
-                                },
-                                body: JSON.stringify({"places": [stop0]}),
-                            });
-                            const result5 = await response5.json();
-                            const response6 = await fetch("get-goods/", {
-                                method: "POST",
-                                cache: "no-cache",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    'X-CSRFToken': '{{ csrf_token }}'
-                                },
-                                body: JSON.stringify({"places": [stop1]}),
-                            });
-                            const result6 = await response6.json();
-                            curr_route_accessibility_check.push([stop0, stop1]);
-                            curr_numIssues.push([result3["data"], result4["data"]]);
-                            
-                            curr_numGoods.push([result5["data"], result6["data"]]);
-                        } else {
-                            const outerList = [];
-                            const outerList2 = [];
-                            for (const innerstep of step.steps) {
-                                if (innerstep.instructions) {
-                                    const innerList = [];
-                                    try {
-                                        const response1 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${innerstep.start_location.lat()}&lon=${innerstep.start_location.lng()}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
-                                        const result1 = await response1.json();
-                                        console.log(result1);
-                                        innerList.push(result1.results[0].place_id);
-                                        const response2 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${innerstep.end_location.lat()}&lon=${innerstep.end_location.lng()}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
-                                        const result2 = await response2.json();
-                                        console.log(result2);
-                                        innerList.push(result2.results[0].place_id);
-                                    } catch (error) {
-                                        console.log('error', error);
-                                    }
-                                    const response3 = await fetch("get-issues/", {
-                                        method: "POST",
-                                        cache: "no-cache",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                            'X-CSRFToken': '{{ csrf_token }}'
-                                        },
-                                        body: JSON.stringify({"places": innerList}),
-                                    });
-                                    const result3 = await response3.json();
-                                    outerList2.push(result3["data"]);
-                                    outerList.push(innerList);
-                                }
-                            }
-                            curr_route_accessibility_check.push(outerList);
-                            curr_numIssues.push(outerList2);
-                        }
-                    }
-                    route_accessibility_check.push(curr_route_accessibility_check);
-                    numIssues.push(curr_numIssues);
-                    numGoods.push(curr_numGoods);
-                    console.log("jasdkfhaksjdhasdfhiashdihasuidhiashdiuhasuidhfhdfiashduihasdifhasiudhfasiudhfiansdfnasjkdnfkajsndfjknasjdnfnakjsjdbfkjajsbdfkjansdkjnfakjsdnfkjandkfansdjkfnakjdnfkjafsndkfanksdfjanskjdfnkasndfkjasndkjfnask");
-                    console.log(curr_numIssues);
-                    var count = 0;
-                    var count1 = 0;
-                    for(var p=0;p<curr_numIssues.length;p++){
-                        for(var l=0;l<curr_numIssues[p].length;l++){
-                            if(curr_numIssues[p][l].length != 0){
-                                count += 1;
-                            }
-                            count1 += 1;
-                        }
-                    }
-
-                    var count2 = 0;
-                    var count3 = 0;
-                    for(var p=0;p<curr_numGoods.length;p++){
-                        for(var l=0;l<curr_numGoods[p].length;l++){
-                            if(curr_numGoods[p][l].length != 0){
-                                count2 += 1;
-                            }
-                            count3 += 1;
-                        }
-                    }
-
-                    console.log(count);
-                    console.log(count1);
-                    console.log();
-                    console.log(count2);
-                    console.log(count3);
-                    console.log();
-                    console.log();
-
-                    // Create a list item for the route
-                    const routeItem = document.createElement('div');
-                    routeItem.style = 'margin: 10px 0; cursor: pointer; border-bottom: 1px solid black;';
-                    routeItem.innerHTML = `<strong>Route ${index + 1}</strong>: ${route.legs[0].start_address} to ${route.legs[0].end_address} taking <strong>${route.legs[0].duration.text}</strong>, from <strong>${route.legs[0].departure_time.text}</strong> to <strong>${route.legs[0].arrival_time.text}</strong> - <span style="color:darkred"><b>${count}</b> Issues</span> - <span style="color:darkgreen"><b>${count2}</b> Good things</span>`;
-                    routeItem.dataset.index = index;
-                    routeItem.dataset.count = count;
-                    routeItem.dataset.count1 = count1;
-
-                    // Add event listener to highlight the route on the map when clicked
-                    routeItem.addEventListener('click', async function() {
-                        console.log(numIssues);
-                        for (let i = 0; i < routeListContainer.children.length; i++) {
-                            routeListContainer.children[i].style.background = "white";
-                        }
-                        routeItem.style.background = "lightgray";
-                        map.directionsRenderers.forEach((r, i) => {
-                            console.log("HEHEHEHEHEHEHEHEHEHEHEHE");
-                            console.log(r);
-                            console.log(count);
-                            console.log(count1);
-                            console.log(generateHexColor(count, count1));
-                            console.log("#########################################################################");
-                            if (i === index) {
-                                r.setOptions({ polylineOptions: { strokeWeight: 5, strokeColor: generateHexColor(this.dataset.count, this.dataset.count1) } });
-                                r.setMap(map);
-                            } else {
-                                r.setOptions({ polylineOptions: { strokeWeight: 1 } });
-                                r.setMap(null);
-                            }
-                        });
-                        routeListContainer.style.display = "none";
-                        document.getElementById("route-info-container").style.display = "block";
-
-                        document.getElementById("route-info-container").innerHTML = `<h3>Route information (${route.legs[0].duration.text}):</h3>`;
-
-                        const detailedSteps = document.createElement('ul');
-                        detailedSteps.style = 'padding-left: 20px;';
-
-                        const curr_route = routes[index];
-                        console.log(curr_route);
-                        var i = 0;
-                        var i1 = 0;
-                        for (const step of route.legs[0].steps) {
-                            console.log("akdsjfsajlsdfaosjfoasjifoajsdojasoidjfaosdjaoifd");
-                            console.log(step);
-                            const stepItem = document.createElement('li');
-                            if (step.travel_mode === "TRANSIT") {
-                                stepItem.innerHTML = step.instructions + ` <span style="color:darkblue"><i>[<span onclick="reportIssueTransit(this)" data-name="${step.transit.departure_stop.name} ||| ${step.transit.line.agencies[0].name}"><strong>${step.transit.departure_stop.name}</strong></span> to <span onclick="reportIssueTransit(this)" data-name="${step.transit.arrival_stop.name} ||| ${step.transit.line.agencies[0].name}"><strong>${step.transit.arrival_stop.name}</strong></span> on <strong>${step.transit.line.name}</strong> ||| <strong>${step.transit.line.agencies[0].name}</strong>]</i></span> ` + ` <strong>(${step.duration.text})</strong> - `;
-                                try{
-                                    console.log("HASDLAHSDFASLADHFL");
-                                    console.log(numIssues);
-                                    console.log(numIssues[index][i]);
-                                    for(var k=0;k<numIssues[index][i][0].length;k++){
-                                        stepItem.innerHTML += `<span style="color:darkred;">${numIssues[index][i][0][k][0]} (<b>${numIssues[index][i][0][k][1]}</b>)</span>, `;
-                                    }
-                                    for(var k=0;k<numIssues[index][i][1].length;k++){
-                                        stepItem.innerHTML += `<span style="color:darkred;">${numIssues[index][i][1][k][0]} (<b>${numIssues[index][i][1][k][1]}</b>)</span>, `;
-                                    }
-                                }
-                                catch (error){
-                                    console.log(error);
-                                }
-                                try{
-                                    console.log("numGoods");
-                                    console.log(numGoods);
-                                    console.log(numGoods[index][i1]);
-                                    for(var k=0;k<numGoods[index][i1][0].length;k++){
-                                        stepItem.innerHTML += `<span style="color:darkgreen;">${numGoods[index][i1][0][k][0]} (<b>${numGoods[index][i1][0][k][1]}</b>)</span>, `;
-                                    }
-                                    for(var k=0;k<numGoods[index][i1][1].length;k++){
-                                        stepItem.innerHTML += `<span style="color:darkgreen;">${numGoods[index][i1][1][k][0]} (<b>${numGoods[index][i1][1][k][1]}</b>)</span>, `;
-                                    }
-                                }
-                                catch (error){
-                                    console.log(error);
-                                }
-                                stepItem.innerHTML = stepItem.innerHTML.substring(0, stepItem.innerHTML.length-2);
-                                i1 += 1;
-                            } else {
-                                stepItem.innerHTML = step.instructions + ` <strong>(${step.duration.text})</strong>`;
-                                const innerSteps = document.createElement('ul');
-                                innerSteps.style = 'padding-left: 50px; color:gray;';
-                                var j = 0;
-                                for (const innerstep of step.steps) {
-                                    if (innerstep.instructions) {
-                                        const innerStepItem = document.createElement('li');
-                                        console.log(numIssues);
-                                        console.log(index);
-                                        console.log(i);
-                                        console.log(j);
-                                        innerStepItem.innerHTML = innerstep.instructions + ` <strong>(${innerstep.duration.text})</strong> - `;
-                                        try{
-                                            for(var k=0;k<numIssues[index][i][j].length;k++){
-                                                innerStepItem.innerHTML += `<span style="color:darkred;">${numIssues[index][i][j][k][0]} (<b>${numIssues[index][i][j][k][1]}</b>)</span>, `
-                                            }
-                                        }
-                                        catch (error){
-                                            console.log(error);
-                                        }
-                                        innerStepItem.innerHTML = innerStepItem.innerHTML.substring(0, innerStepItem.innerHTML.length-2);
-                                        innerStepItem.dataset.i = i;
-                                        innerStepItem.dataset.j = j;
-                                        innerStepItem.dataset.index = routeItem.dataset.index;
-                                        innerStepItem.addEventListener('click', async function() {
-                                            console.log(this.dataset.index);
-                                            console.log(this.dataset.i);
-                                            console.log(this.dataset.j);
-                                            console.log(route_accessibility_check);
-                                            console.log(route_accessibility_check[parseInt(this.dataset.index)][parseInt(this.dataset.i)][parseInt(this.dataset.j)]);
-                                            let problem = prompt("Report an accessibility issue", "Uneven roads");
-                                            if (problem == null || problem == "") {
-                                            } else {
-                                                console.log("Accessibility issue: " + problem);
-                                                const response3 = await fetch("add-issue/", {
-                                                    method: "POST",
-                                                    cache: "no-cache",
-                                                    headers: {
-                                                        "Content-Type": "application/json",
-                                                        'X-CSRFToken': '{{ csrf_token }}'
-                                                    },
-                                                    body: JSON.stringify({"places": route_accessibility_check[parseInt(this.dataset.index)][parseInt(this.dataset.i)][parseInt(this.dataset.j)], "issue": problem}),
-                                                });
-                                                const result3 = await response3.json();
-                                                console.log(result3);
-                                            }
-                                        });
-                                        innerSteps.appendChild(innerStepItem);
-                                        
-                                        j += 1;
-                                    }
-                                }
-                                stepItem.appendChild(innerSteps);
-                            }
-                            document.getElementById("route-info-container").appendChild(stepItem);
-                            i += 1;
-                        }
-
-                        const selectOtherRoute = document.createElement('button');
-                        selectOtherRoute.innerHTML = "Select other route";
-                        selectOtherRoute.addEventListener('click', () => {
-                            routeListContainer.style.display = "block";
-                            document.getElementById("route-info-container").style.display = "none";
-                        });
-                        document.getElementById("route-info-container").appendChild(selectOtherRoute);
-                        document.getElementById("route-info-container").scrollTop = 0;
-                    });
-
-                    // Add the route item to the array
-                    routeItems.push({routeItem, count, count2});
-                }
-
-                // Sort the route items based on the count (or any other criteria)
-                if(accessibility){
-                    routeItems.sort((a, b) => a.count - b.count + 0.5*(b.count2 - a.count2));
-                }
-
-                // Append the sorted route items to the route list container
-                routeItems.forEach(item => routeListContainer.appendChild(item.routeItem));
-            }
-
-
-
-            // Add event listener to the new button
-            document.getElementById('generate-routes').addEventListener('click', generateRoutes);
-
-            initMap();
             document.getElementById("navigate").style.display = "none";
             document.getElementById("about").style.display = "none";
             document.getElementById("contact").style.display = "none";
             document.getElementById("prefs").style.display = "none";
             document.getElementById("mapsettings").style.display = "none";
-            document.getElementById("account").style.display = "block";
-            document.getElementById("responseText").style.display = "none";
+            document.getElementById("account").style.display = "flex";
+            document.getElementById("profile").style.display = "flex";
+            document.getElementById("to_account").style.fontWeight = "bold";
+            document.getElementById("to_profile").style.fontWeight = "bold";
+            document.getElementById("to_prefs").style.fontWeight = "normal";
+            document.getElementById("to_mapsettings").style.fontWeight = "normal";
+            document.getElementById("to_navigate").style.fontWeight = "normal";
+            document.getElementById("to_about").style.fontWeight = "normal";
+            document.getElementById("to_contact").style.fontWeight = "normal";
 
-            function closeSuccess(){
-                document.getElementById("responseText").style.display = "none";
-            }
 
 
             document.getElementById("to_navigate").addEventListener("click", async () => {
@@ -769,46 +546,81 @@
                 .then(data => {
                     console.log(data);
                     if(data.status == true){
-                        document.getElementById("navigate").style.display = "block";
+                        document.getElementById("navigate").style.display = "flex";
                         document.getElementById("account").style.display = "none";
                         document.getElementById("about").style.display = "none";
                         document.getElementById("contact").style.display = "none";
+                        document.getElementById("to_account").style.fontWeight = "normal";
+                        document.getElementById("to_profile").style.fontWeight = "normal";
+                        document.getElementById("to_prefs").style.fontWeight = "normal";
+                        document.getElementById("to_mapsettings").style.fontWeight = "normal";
+                        document.getElementById("to_navigate").style.fontWeight = "bold";
+                        document.getElementById("to_about").style.fontWeight = "normal";
+                        document.getElementById("to_contact").style.fontWeight = "normal";
                     }
                 });
             });
 
             document.getElementById("to_account").addEventListener("click", async () => {
                 document.getElementById("navigate").style.display = "none";
-                document.getElementById("account").style.display = "block";
+                document.getElementById("account").style.display = "flex";
                 document.getElementById("about").style.display = "none";
                 document.getElementById("contact").style.display = "none";
-                document.getElementById("profile").style.display = "block";
+                document.getElementById("profile").style.display = "flex";
                 document.getElementById("prefs").style.display = "none";
                 document.getElementById("mapsettings").style.display = "none";
+                document.getElementById("to_account").style.fontWeight = "bold";
+                document.getElementById("to_profile").style.fontWeight = "bold";
+                document.getElementById("to_prefs").style.fontWeight = "normal";
+                document.getElementById("to_mapsettings").style.fontWeight = "normal";
+                document.getElementById("to_navigate").style.fontWeight = "normal";
+                document.getElementById("to_about").style.fontWeight = "normal";
+                document.getElementById("to_contact").style.fontWeight = "normal";
             });
 
             document.getElementById("to_about").addEventListener("click", async () => {
                 document.getElementById("navigate").style.display = "none";
                 document.getElementById("account").style.display = "none";
-                document.getElementById("about").style.display = "block";
+                document.getElementById("about").style.display = "flex";
                 document.getElementById("contact").style.display = "none";
+                document.getElementById("to_account").style.fontWeight = "normal";
+                document.getElementById("to_profile").style.fontWeight = "normal";
+                document.getElementById("to_prefs").style.fontWeight = "normal";
+                document.getElementById("to_mapsettings").style.fontWeight = "normal";
+                document.getElementById("to_navigate").style.fontWeight = "normal";
+                document.getElementById("to_about").style.fontWeight = "bold";
+                document.getElementById("to_contact").style.fontWeight = "normal";
             });
 
             document.getElementById("to_contact").addEventListener("click", async () => {
                 document.getElementById("navigate").style.display = "none";
                 document.getElementById("account").style.display = "none";
                 document.getElementById("about").style.display = "none";
-                document.getElementById("contact").style.display = "block";
+                document.getElementById("contact").style.display = "flex";
+                document.getElementById("to_account").style.fontWeight = "normal";
+                document.getElementById("to_profile").style.fontWeight = "normal";
+                document.getElementById("to_prefs").style.fontWeight = "normal";
+                document.getElementById("to_mapsettings").style.fontWeight = "normal";
+                document.getElementById("to_navigate").style.fontWeight = "normal";
+                document.getElementById("to_about").style.fontWeight = "normal";
+                document.getElementById("to_contact").style.fontWeight = "bold";
             });
 
             document.getElementById("to_profile").addEventListener("click", async () => {
                 document.getElementById("navigate").style.display = "none";
-                document.getElementById("account").style.display = "block";
+                document.getElementById("account").style.display = "flex";
                 document.getElementById("about").style.display = "none";
                 document.getElementById("contact").style.display = "none";
-                document.getElementById("profile").style.display = "block";
+                document.getElementById("profile").style.display = "flex";
                 document.getElementById("prefs").style.display = "none";
                 document.getElementById("mapsettings").style.display = "none";
+                document.getElementById("to_account").style.fontWeight = "bold";
+                document.getElementById("to_profile").style.fontWeight = "bold";
+                document.getElementById("to_prefs").style.fontWeight = "normal";
+                document.getElementById("to_mapsettings").style.fontWeight = "normal";
+                document.getElementById("to_navigate").style.fontWeight = "normal";
+                document.getElementById("to_about").style.fontWeight = "normal";
+                document.getElementById("to_contact").style.fontWeight = "normal";
             });
 
             document.getElementById("to_prefs").addEventListener("click", async () => {
@@ -825,12 +637,19 @@
                 .then(data => {
                     if(data.status == true){
                         document.getElementById("navigate").style.display = "none";
-                        document.getElementById("account").style.display = "block";
+                        document.getElementById("account").style.display = "flex";
                         document.getElementById("about").style.display = "none";
                         document.getElementById("contact").style.display = "none";
                         document.getElementById("profile").style.display = "none";
-                        document.getElementById("prefs").style.display = "block";
+                        document.getElementById("prefs").style.display = "flex";
                         document.getElementById("mapsettings").style.display = "none";
+                        document.getElementById("to_account").style.fontWeight = "bold";
+                        document.getElementById("to_profile").style.fontWeight = "normal";
+                        document.getElementById("to_prefs").style.fontWeight = "bold";
+                        document.getElementById("to_mapsettings").style.fontWeight = "normal";
+                        document.getElementById("to_navigate").style.fontWeight = "normal";
+                        document.getElementById("to_about").style.fontWeight = "normal";
+                        document.getElementById("to_contact").style.fontWeight = "normal";
                     }
                 });
             });
@@ -849,12 +668,19 @@
                 .then(data => {
                     if(data.status == true){
                         document.getElementById("navigate").style.display = "none";
-                        document.getElementById("account").style.display = "block";
+                        document.getElementById("account").style.display = "flex";
                         document.getElementById("about").style.display = "none";
                         document.getElementById("contact").style.display = "none";
                         document.getElementById("profile").style.display = "none";
                         document.getElementById("prefs").style.display = "none";
-                        document.getElementById("mapsettings").style.display = "block";
+                        document.getElementById("mapsettings").style.display = "flex";
+                        document.getElementById("to_account").style.fontWeight = "bold";
+                        document.getElementById("to_profile").style.fontWeight = "normal";
+                        document.getElementById("to_prefs").style.fontWeight = "normal";
+                        document.getElementById("to_mapsettings").style.fontWeight = "bold";
+                        document.getElementById("to_navigate").style.fontWeight = "normal";
+                        document.getElementById("to_about").style.fontWeight = "normal";
+                        document.getElementById("to_contact").style.fontWeight = "normal";
                     }
                 });
             });
@@ -877,16 +703,9 @@
                     .then(response => response.json())
                     .then(data => {
                         if(data.status == "OK"){
-                            document.getElementById("responseText").style.display = "block";
-                            document.getElementById("responseText").style.background = "lightgreen";
-                            document.getElementById("responseText").innerHTML = "User details updated";
-                            setTimeout(closeSuccess, 3000);
                         }
                         else{
-                            document.getElementById("responseText").style.display = "block";
-                            document.getElementById("responseText").style.background = "lightred";
-                            document.getElementById("responseText").innerHTML = "Update failed";
-                            setTimeout(closeSuccess, 3000);
+                            alert("FAILED");
                         }
                     });
                 }
@@ -929,8 +748,7 @@
                 .then(data => {
                 });
             });
-
-            
         });
     </script>
-{% endblock %}
+</body>
+</html>
