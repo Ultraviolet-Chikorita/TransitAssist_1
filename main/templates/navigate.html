@@ -346,6 +346,7 @@
                     alert("Please select two places to generate routes.");
                     return;
                 }
+                console.log("point 1");
 
                 const response199 = await fetch("{% url 'get-map-settings' %}", {
                     method: "POST",
@@ -357,6 +358,7 @@
                     body: JSON.stringify({}),
                 });
                 const result199 = await response199.json();
+                console.log("point 2");
                 challenge = result199["challenge"];
                 accessibility = result199["accessibility"];
                 autosave = result199["autosave"];
@@ -376,6 +378,8 @@
                         routingPreference: 'LESS_WALKING'
                     }
                 };
+
+                console.log("point 3");
 
                 directionsService.route(request, async function(result, status) {
                     if (status == 'OK') {
@@ -398,7 +402,9 @@
 
             }
 
-            document.getElementById("generate-routes").onclick = generateRoutes();
+            document.getElementById("generate-routes").addEventListener('click', () => {
+                generateRoutes();
+            })
         });
     </script>
 </body>
