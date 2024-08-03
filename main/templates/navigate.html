@@ -27,7 +27,7 @@
         nav .logo {
             width: 100px;
             height: 100px;
-            background: url("{% static logo.png %}") no-repeat center center;
+            background: url("{% static 'logo.png' %}") no-repeat center center;
             background-size: contain;
         }
 
@@ -123,7 +123,7 @@
                     <h6 style="margin:0px;margin-left:30px;">Origin&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#00ff00">&#11044;</span></h6>
                 </div>
                 <div id="go-btn-holder" style="width:25%;margin-left:auto;height:100%;display:flex;align-items: center;justify-content: center;">
-                    <img id="generate-routes" src="{% static go_btn.png %}" style="width:100%;margin:10px;border:1px solid white;border-radius: 40px;"/>
+                    <img id="generate-routes" src="{% static 'go_btn.png' %}" style="width:100%;margin:10px;border:1px solid white;border-radius: 40px;"/>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
             if (problem == null || problem == "") {
             } else {
                 console.log("Accessibility issue: " + problem);
-                const response3 = await fetch("add-issue/", {
+                const response3 = await fetch("{% url 'add-issue' %}", {
                     method: "POST",
                     cache: "no-cache",
                     headers: {
@@ -193,7 +193,7 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
 
-            const response99 = await fetch("get-map-settings/", {
+            const response99 = await fetch("{% url 'get-map-settings' %}", {
                 method: "POST",
                 cache: "no-cache",
                 headers: {
@@ -347,7 +347,7 @@
                     return;
                 }
 
-                const response199 = await fetch("get-map-settings/", {
+                const response199 = await fetch("{% url 'get-map-settings' %}", {
                     method: "POST",
                     cache: "no-cache",
                     headers: {
@@ -379,7 +379,7 @@
 
                 directionsService.route(request, async function(result, status) {
                     if (status == 'OK') {
-                        const response = await fetch("save-route/", {
+                        const response = await fetch("{% url 'save-route' %}", {
                             method: "POST",
                             cache: "no-cache",
                             headers: {
