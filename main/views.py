@@ -249,7 +249,7 @@ def home(request):
         challenge = mapsettings.challenge
         accessibility = mapsettings.accessibility
         autosave = mapsettings.autosave
-        savedRoutes = list(user.routes.filter(saved=True))
+        savedRoutes = list(user.routes.filter(saved=True)).reverse()
         processedSavedRoutes = []
         for route in savedRoutes:
             processedSavedRoutes.append({"start": route.start, "end": route.end, "date": route.time.strftime("%d/%m/%Y")})
