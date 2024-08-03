@@ -75,6 +75,8 @@ class userRoutes(models.Model):
         returnval = self.user.username + ": Route from " + self.start + " to " + self.end + " at " + self.time.strftime("%d/%m/%Y")
         if self.saved:
             returnval = "SAVED ||||| " + returnval
+        if self.saved == False:
+            returnval += " NOT SAVED"
         return returnval
 
 class accessibilityIssues(models.Model):
