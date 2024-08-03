@@ -1,0 +1,403 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            color: #fff;
+            font-family: "Work Sans", sans-serif;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: black;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            position: absolute;
+            left: 80px;
+            height: 5vh;
+            display: flex;
+            align-items: center;
+        }
+
+        nav .logo {
+            width: 100px;
+            height: 100px;
+            background: url("{% static logo.png %}") no-repeat center center;
+            background-size: contain;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        
+
+        .logoutbtn {
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+
+        .logoutbtn-parent {
+            width: 90px;
+            position: relative;
+            border-radius: 10px;
+            background-color: #000;
+            box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset;
+            border: 1px solid rgba(255, 255, 255, 0.236);
+            box-sizing: border-box;
+            height: 43px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            text-align: left;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .main-content {
+            height: 90vh;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        gmp-place-autocomplete::part(input) {
+            background-color: #ff0000;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        #generate-routes{
+            cursor: pointer;
+        }
+
+        #generate-routes:hover{
+            box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset, -15px -20px 24.8px rgba(77, 36, 243, 0.2) inset, -1px -1px 1.5px rgba(255, 255, 255, 0.3) inset, -3px -4px 9.4px rgba(157, 132, 255, 0.2) inset;
+        }
+
+    </style>
+</head>
+<body>
+    <div style="height: 10vh; margin: 0; width: 100%; display: flex; align-items: center; background-color: #0a0a0a;">
+        <nav>
+            <div class="logo"></div>
+            <h1 style="font-size: 60px;">TransitAssist</h1>
+        </nav>
+        <div style="margin-left:auto;margin-right:80px;height:5vh;display:flex;align-items:center;">
+            <form id="logoutForm" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <div class="logoutbtn-parent">
+                    <div class="logoutbtn" onclick="document.getElementById('logoutForm').submit()">
+                        <div>Logout</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="main-content">
+        <div style="width:30%;height:100%;display:flex;justify-content: center;">
+            <div style="width:80%;padding:20px;border-bottom:1px solid rgba(255,255,255,0.15);height: 12vh;display:flex;flex-direction:row;">
+                <div id="place-inputs" style="margin-top:30px;width:70%">
+                    <h6 style="margin:0px;margin-left:30px;">Origin&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#00ff00">&#11044;</span></h6>
+                </div>
+                <div id="go-btn-holder" style="width:25%;margin-left:auto;height:100%;display:flex;align-items: center;justify-content: center;">
+                    <img id="generate-routes" src="{% static go_btn.png %}" style="width:100%;margin:10px;border:1px solid white;border-radius: 40px;"/>
+                </div>
+            </div>
+        </div>
+        <div style="width:70%;height:100%;display:flex;background-color: orange;">
+            <div id="map" style="width:100%;height:100%;padding: 0;margin: 0;"></div>
+        </div>
+    </div>
+    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "AIzaSyCbZ2QUNhC61wdGwvKkjyTV4M3KkEKtX_E", v: "beta"});</script>
+    <script>
+
+        let map;
+        let origin;
+        let marker1;
+        let infoWindow1;
+        let destination;
+        let marker2;
+        let infoWindow2;
+        let challenge = false;
+        let accessibility = false;
+        let autosave = false;
+        let directionsService;
+        let directionsRenderer;
+        let routes = [];
+        let curr_route_accessibility_check = [];
+        let route_accessibility_check = [];
+        let curr_numIssues = [];
+        let numIssues = [];
+        let curr_numGoods = [];
+        let numGoods = [];
+
+        function generateHexColor(x, y) {
+            var hexColor = "#000000";
+            if(challenge){
+                if (y === 0) {
+                    throw new Error("y cannot be zero");
+                }
+                let ratio = x / y;
+                ratio = Math.max(0, Math.min(1, ratio));
+                const red = Math.round(255 * ratio);
+                const green = Math.round(255 * (1 - ratio));
+                const redHex = red.toString(16).padStart(2, '0');
+                const greenHex = green.toString(16).padStart(2, '0');
+                hexColor = `#${redHex}${greenHex}00`;
+            }
+            return hexColor;
+        }
+
+        async function reportIssueTransit(sp){
+            let problem = prompt("Report an accessibility issue", "No escalator access");
+            if (problem == null || problem == "") {
+            } else {
+                console.log("Accessibility issue: " + problem);
+                const response3 = await fetch("add-issue/", {
+                    method: "POST",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({"places": [sp.dataset.name], "issue": problem}),
+                });
+                const result3 = await response3.json();
+                console.log(result3);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            const response99 = await fetch("get-map-settings/", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({}),
+            });
+            const result99 = await response99.json();
+            challenge = result99["challenge"];
+            accessibility = result99["accessibility"];
+            autosave = result99["autosave"];
+
+
+            async function initMap() {
+                const [{ Map }, { AdvancedMarkerElement, PinElement, Marker }, { PlaceAutocompleteElement }, { Geometry }] = await Promise.all([
+                    google.maps.importLibrary("maps"),
+                    google.maps.importLibrary("marker"),
+                    google.maps.importLibrary("places"),
+                    google.maps.importLibrary("geometry"),
+                ]);
+
+                directionsService = new google.maps.DirectionsService();
+                directionsRenderer = new google.maps.DirectionsRenderer();
+
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: { lat: 40.749933, lng: -73.98633 },
+                    zoom: 13,
+                    mapId: "4504f8b37365c3d0",
+                    mapTypeControl: false,
+                });
+
+                directionsRenderer.setMap(map);
+
+                const place1Autocomplete = new google.maps.places.PlaceAutocompleteElement();
+                place1Autocomplete.id = "place1-autocomplete-input";
+                document.getElementById("place-inputs").appendChild(place1Autocomplete);
+                marker1 = new google.maps.Marker({
+                    map: map,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 0,
+                    },
+                });
+                infoWindow1 = new google.maps.InfoWindow({});
+                place1Autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
+                    console.log("hello");
+                    await place.fetchFields({
+                        fields: ["displayName", "formattedAddress", "location"],
+                    });
+                    origin = place.toJSON();
+                    console.log(origin);
+                    updateMapAndMarkers();
+                });
+
+                const destinationHeader = document.createElement('h6');
+                destinationHeader.style = "margin:0px;margin-left:30px;margin-top:30px;";
+                destinationHeader.innerHTML = `Destination&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ff0000;">&#11044;</span>`;
+
+                document.getElementById("place-inputs").appendChild(destinationHeader);
+
+                const place2Autocomplete = new google.maps.places.PlaceAutocompleteElement();
+                place2Autocomplete.id = "place2-autocomplete-input";
+                document.getElementById("place-inputs").appendChild(place2Autocomplete);
+                marker2 = new google.maps.Marker({
+                    map: map,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE, // Set an initial path to avoid the default red pin
+                        scale: 0, // Make the initial path invisible
+                    },
+                });
+                infoWindow2 = new google.maps.InfoWindow({});
+                place2Autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
+                    await place.fetchFields({
+                        fields: ["displayName", "formattedAddress", "location"],
+                    });
+                    destination = place.toJSON();
+                    console.log(destination);
+                    updateMapAndMarkers();
+                });
+            }
+
+            function updateMapAndMarkers() {
+                console.log("hello");
+                let isOrigin = false;
+                let isDestination = false;
+                if (origin && origin.location) {
+                    isOrigin = true;
+                    let content1 =
+                        '<div id="infowindow-content" style="color:black;">' +
+                        '<span id="place-displayname" class="title">' +
+                        origin.displayName +
+                        "</span><br />" +
+                        '<span id="place-address">' +
+                        origin.formattedAddress +
+                        "</span>" +
+                        "</div>";
+                    updateInfoWindow(infoWindow1, content1, origin.location, marker1);
+                    marker1.setPosition(origin.location);
+                    marker1.setIcon({path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: "#00ff00", fillOpacity: 1, strokeWeight: 0.8});
+                    marker1.setMap(map);
+                }
+
+                if (destination && destination.location) {
+                    isDestination = true;
+                    let content2 =
+                        '<div id="infowindow-content" style="color:black;">' +
+                        '<span id="place-displayname" class="title">' +
+                        destination.displayName +
+                        "</span><br />" +
+                        '<span id="place-address">' +
+                        destination.formattedAddress +
+                        "</span>" +
+                        "</div>";
+                    updateInfoWindow(infoWindow2, content2, destination.location, marker2);
+                    marker2.setPosition(destination.location);
+                    marker2.setIcon({path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: "#ff0000", fillOpacity: 1, strokeWeight: 0.8});
+                    marker2.setMap(map);
+                }
+
+                // Adjust the map to fit both markers if both places are selected.
+                if (isOrigin && isDestination) {
+                    const bounds = new google.maps.LatLngBounds();
+                    bounds.extend(origin.location);
+                    bounds.extend(destination.location);
+                    map.fitBounds(bounds);
+                } else if (isOrigin) {
+                    map.setCenter(origin.location);
+                    map.setZoom(17);
+                } else if (isDestination) {
+                    map.setCenter(destination.location);
+                    map.setZoom(17);
+                }
+            }
+
+            function updateInfoWindow(infoWindow, content, center, marker) {
+                infoWindow.setContent(content);
+                infoWindow.setPosition(center);
+                infoWindow.open({
+                    map,
+                    anchor: marker,
+                    shouldFocus: false,
+                });
+            }
+
+            initMap();
+
+            async function generateRoutes() {
+                if (!(origin && origin.location && destination && destination.location)) {
+                    alert("Please select two places to generate routes.");
+                    return;
+                }
+
+                const response199 = await fetch("get-map-settings/", {
+                    method: "POST",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({}),
+                });
+                const result199 = await response199.json();
+                challenge = result199["challenge"];
+                accessibility = result199["accessibility"];
+                autosave = result199["autosave"];
+
+                curr_route_accessibility_check = [];
+                route_accessibility_check = [];
+                curr_numIssues = [];
+                numIssues = [];
+
+
+                let request = {
+                    origin: origin.location,
+                    destination: destination.location,
+                    travelMode: 'TRANSIT',
+                    provideRouteAlternatives: true,
+                    transitOptions: {
+                        routingPreference: 'LESS_WALKING'
+                    }
+                };
+
+                directionsService.route(request, async function(result, status) {
+                    if (status == 'OK') {
+                        const response = await fetch("save-route/", {
+                            method: "POST",
+                            cache: "no-cache",
+                            headers: {
+                                "Content-Type": "application/json",
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({"start": origin.displayName, "end": destination.displayName}),
+                        });
+                        const result2 = await response.json();
+                        console.log(result2);
+                        displayRoutes(result);
+                    } else {
+                        alert('Could not generate routes: ' + status);
+                    }
+                });
+
+            }
+        });
+    </script>
+</body>
+</html>

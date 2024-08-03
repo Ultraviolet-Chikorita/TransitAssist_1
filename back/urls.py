@@ -39,4 +39,5 @@ urlpatterns = [
     path("home-about/", views.home_about, name="home-about"),
     path("home-contact/", views.home_contact, name="home-contact"),
     path("get-saved-routes/", views.get_saved_routes, name="get-saved-routes"),
+    path("navigate/", views.navigate, name="navigate"),
 ]

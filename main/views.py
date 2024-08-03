@@ -231,6 +231,11 @@ def get_map_settings(request):
         autosave = mapsettings.autosave
         return JsonResponse({"status": "OK", "challenge": challenge, "accessibility": accessibility, "autosave": autosave})
 
+def navigate(request):
+    if request.user.is_authenticated:
+        return render(request, 'navigate.html')
+
+
 def home(request):
     if request.user.is_authenticated:
         CustomUser = get_user_model()
