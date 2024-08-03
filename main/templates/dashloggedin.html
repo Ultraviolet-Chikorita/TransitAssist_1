@@ -521,6 +521,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;--
                 </div>
                 <div id="navigate" style="overflow-y: scroll;">
+                    <div style="width:100%;display:flex;height:1vh;margin-top: -0.5vh;background-color: white;align-items: center;justify-content: center;"></div>
                     <h2>Most recent unsaved journey</h2>
                     <div style="margin-top:20px;padding:20px;display:flex;flex-direction: row;width:90%;border: 1px solid rgba(255,255,255,0.15);height:4vh;align-items:center;border-radius:20px;background-color:rgba(0,0,0,0.1)">
                         <div>
@@ -535,8 +536,8 @@
                                 <div style="color:#b7b7b7">Starting Location</div>
                                 <div><b>{{route.start}}</b></div>
                             </div>
-                            <div style="display:flex;margin-left: auto;flex-direction: column;width:20%;">
-                                <div style="color:#b7b7b7">SAVE</div>
+                            <div style="display:flex;margin-left: auto;flex-direction: column;width:10%;">
+                                <button style="width:100%;padding:5px;border-radius:20px;border:none;background-color:#282530;text-align:center;color:white;font-weight:bold;padding-top:9px;padding-bottom:10px;font-size:20px;border:1px solid rgba(255,255,255,0.15)">SAVE</button>
                             </div>
                         {% else %}
                         <div style="display:flex;margin-left: 20px;flex-direction: row;color:#b7b7b7">
