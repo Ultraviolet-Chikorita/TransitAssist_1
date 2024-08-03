@@ -526,13 +526,13 @@
                             <img src="{% static 'globe.png' %}" style="height:40px;"/>
                         </div>
                         {% if route.start != "" %}
-                            <div style="display:flex;margin-left: 20px;flex-direction: row;">
-                                <b>{{route.end}}</b>
-                                <span>{{route.date}}</span>  
+                            <div style="display:flex;margin-left: 20px;flex-direction: row;width:max-content;">
+                                <div><b>{{route.end}}</b></div>
+                                <div>{{route.date}}</div>  
                             </div>
                             <div style="display:flex;margin-left: 20px;flex-direction: row;">
-                                <span style="color:#b7b7b7">Starting Location</span>
-                                <b>{{route.start}}</b>
+                                <div style="color:#b7b7b7">Starting Location</div>
+                                <div><b>{{route.start}}</b></div>
                             </div>
                         {% else %}
                         <div style="display:flex;margin-left: 20px;flex-direction: row;color:#b7b7b7">
