@@ -249,7 +249,7 @@ def home(request):
         challenge = mapsettings.challenge
         accessibility = mapsettings.accessibility
         autosave = mapsettings.autosave
-        savedRoutes = list(user.routes.all())
+        savedRoutes = list(user.routes.filter(saved=True))
         savedRoutes.reverse()
         processedSavedRoutes = []
         for route in savedRoutes:
