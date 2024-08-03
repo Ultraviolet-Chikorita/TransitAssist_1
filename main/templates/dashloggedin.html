@@ -525,10 +525,11 @@
                         <div>
                             <img src="{% static 'globe.png' %}" style="height:40px;"/>
                         </div>
-                        {% if route['start'] != "" %}
+                        {{route}}
+                        {% if route.start != "" %}
                             <div style="display:flex;margin-left: 20px;flex-direction: column;width:max-content;">
-                                <div><b>{{route['end']}}</b></div>
-                                <div>{{route['date']}}</div>  
+                                <div><b>{{route.end}}</b></div>
+                                <div>{{route.date}}</div>  
                             </div>
                             <div style="display:flex;margin-left: 80px;flex-direction: column;">
                                 <div style="color:#b7b7b7">Starting Location</div>
