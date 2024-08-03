@@ -254,7 +254,7 @@ def home(request):
         for route in savedRoutes:
             processedSavedRoutes.append({"start": route.start, "end": route.end, "date": route.time.strftime("%d/%m/%Y")})
         try:
-            unsavedRoute = user.routes.filter(saved=False)[0]
+            unsavedRoute = user.routes.filter(saved=False)[-1]
             processedRoute = {"start": unsavedRoute.start, "end": unsavedRoute.end, "date":unsavedRoute.time.strftime("%d/%m/%Y")}
         except:
             processedRoute = {"start": ""}
