@@ -547,7 +547,7 @@
                 let routeDivs = [];
                 if(routes.length == 1){
                     let routeDiv = document.createElement('div');
-                    routeDiv.style = "width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:30px;display:flex;flex-direction:row;";
+                    routeDiv.style = style="cursor: pointer; width: 65%; height: 12vh; background-color: rgb(24, 21, 30); border: 0px; border-radius: 30px 30px 0px 0px; display: flex; flex-direction: row;";
                     routeDiv.classList.add("route-selection-div");
 
                     routeDivs = [routeDiv];
@@ -574,19 +574,19 @@
                 for(var i=0; i<routeDivs.length; i++){
                     document.getElementById("full-screen-overlay").appendChild(routeDivs[i]);
                     let startTimeDiv = document.createElement('div');
-                    startTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    startTimeDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
                     startTimeDiv.innerHTML = `<div><p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p></div>`;
                     routeDivs[i].appendChild(startTimeDiv);
                     let endTimeDiv = document.createElement('div');
-                    endTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    endTimeDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
                     endTimeDiv.innerHTML = `<div><p>End time</p><p>${routes[i].legs[0].arrival_time.text}</p></div>`;
                     routeDivs[i].appendChild(endTimeDiv);
                     let inaccessibilitiesDiv = document.createElement('div');
-                    inaccessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    inaccessibilitiesDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
                     inaccessibilitiesDiv.innerHTML = `<div><p>Inaccessibilities</p><p>${routes[i].numIssues}</p></div>`;
                     routeDivs[i].appendChild(inaccessibilitiesDiv);
                     let accessibilitiesDiv = document.createElement('div');
-                    accessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    accessibilitiesDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
                     accessibilitiesDiv.innerHTML = `<div><p>Accessibilities</p><p>${routes[i].numSuccesses}</p></div>`;
                     routeDivs[i].appendChild(accessibilitiesDiv);
                     routeDivs[i].dataset.routeId = i;
@@ -626,7 +626,7 @@
                         document.getElementById("route-info").appendChild(accessibilitiesDiv);
                         let changeRouteDiv = document.createElement('div');
                         changeRouteDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;padding-right:20px;align-items:center;justify-content:center;";
-                        changeRouteDiv.innerHTML = `<button style="font-size:18px;width:80%;height:80%;background-color:#282530;border-radius:40px;border:1px solid rgba(255,255,255,0.1);color:white;" onclick='document.getElementById("show-overlay-btn").click();'>Change route</button>`;
+                        changeRouteDiv.innerHTML = `<button style="cursor:pointer;font-size:18px;width:80%;height:80%;background-color:#282530;border-radius:40px;border:1px solid rgba(255,255,255,0.1);color:white;" onclick='document.getElementById("show-overlay-btn").click();'>Change route</button>`;
                         document.getElementById("route-info").appendChild(changeRouteDiv);
                         for(var j=0;j<map.directionsRenderers.length;j++){
                             if(j == routeId){
