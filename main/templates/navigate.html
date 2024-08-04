@@ -120,7 +120,7 @@
         <nav>
             <div class="logo"></div>
             <h1 style="font-size: 60px;">TransitAssist</h1>
-            <button id="show-overlay-btn" style="margin-left: 20px;">Show Overlay</button>
+            
         </nav>
         <div style="margin-left:auto;margin-right:80px;height:5vh;display:flex;align-items:center;">
             <form id="logoutForm" action="{% url 'logout' %}" method="post">
@@ -151,7 +151,6 @@
         </div>
     </div>
     <div id="full-screen-overlay" style="display: none;" onclick="document.getElementById('close-overlay-btn').click()">
-        <button id="close-overlay-btn" style="display:none;">Close</button>
         <div style="width:60%;height:10vh;background-color: black;border-radius: 30px 30px 0 0;border: 1px solid rgba(255, 255, 255, 0.2);border-bottom: 0px;"></div>
         <div style="width:60%;height:10vh;background-color: rgb(26, 26, 26);border: 1px solid rgba(255, 255, 255, 0.2);border-bottom: 0px;border-top:0px;"></div>
         <div style="width:60%;height:10vh;background-color: black;border: 1px solid rgba(255, 255, 255, 0.2);border-bottom: 0px;border-top:0px;"></div>
@@ -159,6 +158,8 @@
         <div style="width:60%;height:10vh;background-color: black;border: 1px solid rgba(255, 255, 255, 0.2);border-bottom: 0px;border-top:0px;"></div>
         <div style="width:60%;height:10vh;background-color: rgb(26, 26, 26);border-radius: 0 0 30px 30px;border: 1px solid rgba(255, 255, 255, 0.2);border-top:0px;"></div>
     </div>
+    <button id="show-overlay-btn" style="display: none;">Show Overlay</button>
+    <button id="close-overlay-btn" style="display:none;">Close</button>
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
         ({key: "AIzaSyCbZ2QUNhC61wdGwvKkjyTV4M3KkEKtX_E", v: "beta"});</script>
     <script>
@@ -529,6 +530,20 @@
                 map.directionsRenderers = [];
                 routes = await processRoutes(res);
                 console.log(routes);
+                for (const [index, route] of result.routes.entries()) {
+                    const renderer = new google.maps.DirectionsRenderer({
+                        map: map,
+                        directions: result,
+                        routeIndex: index, // Specify the route index to display
+                        polylineOptions: {
+                            strokeColor: "#000",
+                            strokeOpacity: 0.7,
+                            strokeWeight: 5
+                        },
+                        suppressMarkers: true // Suppress default markers
+                    });
+                    map.directionsRenderers.push(renderer);
+                }
             }
         });
     </script>
