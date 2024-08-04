@@ -483,7 +483,7 @@
                                 body: JSON.stringify({"places": currStep.ids}),
                             });
                             const result1 = await response1.json();
-                            currPart.issues = result1["data"];
+                            currStep.issues = result1["data"];
                             const response2 = await fetch("{% url 'get-goods' %}", {
                                 method: "POST",
                                 cache: "no-cache",
@@ -494,7 +494,7 @@
                                 body: JSON.stringify({"places": currStep.ids}),
                             });
                             const result2 = await response2.json();
-                            currPart.successes = result2["data"];
+                            currStep.successes = result2["data"];
                             currRoute.totalSteps += 1;
                         }
                     }
