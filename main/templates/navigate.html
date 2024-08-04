@@ -127,6 +127,19 @@
             z-index: 1000;
         }
 
+        .spinner{
+            animation: rotation 8s infinite linear;
+        }
+
+        @keyframes rotation {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(359deg);
+            }
+        }
+
         
     </style>
 </head>
@@ -168,7 +181,8 @@
     </div>
     <div id="full-screen-overlay" style="display: none;" onclick="document.getElementById('close-overlay-btn').click()"></div>
     <div id="loading-overlay" style="display: none;" onclick="document.getElementById('close-loading-btn').click()">
-        <img src="{% static 'logo.png' %}" style="width:200px;border-radius: 200px;"/>
+        <img class="spinner" src="{% static 'logo.png' %}" style="width:200px;border-radius: 200px;"/>
+        <h1 style="font-size:50px;">Loading</h1>
     </div>
     <button id="show-overlay-btn" style="display: none;"></button>
     <button id="close-overlay-btn" style="display:none;"></button>
@@ -405,6 +419,8 @@
                     alert("Please select two places to generate routes.");
                     return;
                 }
+
+                showLoadingBtn.click();
 
                 const response199 = await fetch("{% url 'get-map-settings' %}", {
                     method: "POST",
@@ -691,6 +707,7 @@
                         }
                     })
                 }
+                closeLoadingBtn.click();
                 document.getElementById("show-overlay-btn").click();
                 
             }
