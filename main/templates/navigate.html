@@ -192,7 +192,6 @@
             let problem = prompt("Report an accessibility issue", "No escalator access");
             if (problem == null || problem == "") {
             } else {
-                console.log("Accessibility issue: " + problem);
                 const response3 = await fetch("{% url 'add-issue' %}", {
                     method: "POST",
                     cache: "no-cache",
@@ -203,7 +202,6 @@
                     body: JSON.stringify({"places": [sp.dataset.name], "issue": problem}),
                 });
                 const result3 = await response3.json();
-                console.log(result3);
             }
         }
 
@@ -270,12 +268,10 @@
                 });
                 infoWindow1 = new google.maps.InfoWindow({});
                 place1Autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
-                    console.log("hello");
                     await place.fetchFields({
                         fields: ["displayName", "formattedAddress", "location"],
                     });
                     origin = place.toJSON();
-                    console.log(origin);
                     updateMapAndMarkers();
                 });
 
@@ -301,13 +297,11 @@
                         fields: ["displayName", "formattedAddress", "location"],
                     });
                     destination = place.toJSON();
-                    console.log(destination);
                     updateMapAndMarkers();
                 });
             }
 
             function updateMapAndMarkers() {
-                console.log("hello");
                 let isOrigin = false;
                 let isDestination = false;
                 if (origin && origin.location) {
@@ -404,7 +398,6 @@
 
                 directionsService.route(request, async function(result, status) {
                     if (status == 'OK') {
-                        console.log(result);
                         const response = await fetch("{% url 'save-route' %}", {
                             method: "POST",
                             cache: "no-cache",
@@ -415,7 +408,6 @@
                             body: JSON.stringify({"start": origin.displayName, "end": destination.displayName}),
                         });
                         const result2 = await response.json();
-                        console.log(result2);
                         displayRoutes(result);
                     } else {
                         alert('Could not generate routes: ' + status);
