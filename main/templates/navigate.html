@@ -112,6 +112,21 @@
             z-index: 1000;
         }
 
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
         
     </style>
 </head>
@@ -151,11 +166,14 @@
             <div id="map" style="width:100%;height:100%;padding: 0;margin: 0;"></div>
         </div>
     </div>
-    <div id="full-screen-overlay" style="display: none;" onclick="document.getElementById('close-overlay-btn').click()">
-        
+    <div id="full-screen-overlay" style="display: none;" onclick="document.getElementById('close-overlay-btn').click()"></div>
+    <div id="loading-overlay" style="display: none;" onclick="document.getElementById('close-loading-btn').click()">
+        <img src="{% static 'logo.png' %}" style="width:200px;border-radius: 200px;"/>
     </div>
-    <button id="show-overlay-btn" style="display: none;">Show Overlay</button>
-    <button id="close-overlay-btn" style="display:none;">Close</button>
+    <button id="show-overlay-btn" style="display: none;"></button>
+    <button id="close-overlay-btn" style="display:none;"></button>
+    <button id="show-loading-btn" style="display: none;"></button>
+    <button id="close-loading-btn" style="display:none;"></button>
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
         ({key: "AIzaSyCbZ2QUNhC61wdGwvKkjyTV4M3KkEKtX_E", v: "beta"});</script>
     <script>
@@ -219,6 +237,18 @@
 
             closeOverlayBtn.addEventListener('click', () => {
                 fullScreenOverlay.style.display = 'none';
+            });
+
+            const showLoadingBtn = document.getElementById('show-loading-btn');
+            const closeLoadingBtn = document.getElementById('close-loading-btn');
+            const LoadingOverlay = document.getElementById('loading-overlay');
+
+            showLoadingBtn.addEventListener('click', () => {
+                LoadingOverlay.style.display = 'flex';
+            });
+
+            closeLoadingBtn.addEventListener('click', () => {
+                LoadingOverlay.style.display = 'none';
             });
 
 
@@ -485,25 +515,45 @@
                                     "Content-Type": "application/json",
                                     'X-CSRFToken': '{{ csrf_token }}'
                                 },
-                                body: JSON.stringify({"places": currStep.ids}),
+                                body: JSON.stringify({"places": [currStep.ids[0]]}),
                             });
                             const result1 = await response1.json();
-                            currStep.issues = result1["data"];
-                            const response2 = await fetch("{% url 'get-goods' %}", {
+                            const response2 = await fetch("{% url 'get-issues' %}", {
                                 method: "POST",
                                 cache: "no-cache",
                                 headers: {
                                     "Content-Type": "application/json",
                                     'X-CSRFToken': '{{ csrf_token }}'
                                 },
-                                body: JSON.stringify({"places": currStep.ids}),
+                                body: JSON.stringify({"places": [currStep.ids[1]]}),
                             });
                             const result2 = await response2.json();
-                            currStep.successes = result2["data"];
-                            if(currStep.issues.length > 0){
+                            currStep.issues = [result1["data"], result2["data"]];
+                            const response3 = await fetch("{% url 'get-goods' %}", {
+                                method: "POST",
+                                cache: "no-cache",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                body: JSON.stringify({"places": [currStep.ids[0]]}),
+                            });
+                            const result3 = await response3.json();
+                            const response4 = await fetch("{% url 'get-goods' %}", {
+                                method: "POST",
+                                cache: "no-cache",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                body: JSON.stringify({"places": [currStep.ids[1]]}),
+                            });
+                            const result4 = await response4.json();
+                            currStep.successes = [result3["data"], result4["data"]];
+                            if(currStep.issues[0].length > 0 || currStep.issues[1].length > 0){
                                 currRoute.numIssues += 1;
                             }
-                            if(currStep.successes.length > 0){
+                            if(currStep.successes[0].length > 0 || currStep.successes[1].length > 0){
                                 currRoute.numSuccesses += 1;
                             }
                             currRoute.totalSteps += 1;
@@ -534,7 +584,7 @@
                         directions: res,
                         routeIndex: index,
                         polylineOptions: {
-                            strokeColor: (index == 0) ? '#0000FF' : '#1b1b1b', // Highlight the best route in blue, others in grey
+                            strokeColor: generateHexColor(route.numIssues, route.totalSteps), // Highlight the best route in blue, others in grey
                             strokeOpacity: 0.6,
                             strokeWeight: 4,
                         },
