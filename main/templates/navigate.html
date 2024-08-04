@@ -213,9 +213,16 @@
                 }
                 let ratio = x / y;
                 ratio = Math.max(0, Math.min(1, ratio));
-                const red = Math.round(255 * ratio);
-                const redHex = red.toString(16).padStart(2, '0');
-                hexColor = `#${redHex}0000`;
+                if(ratio > 0.5){
+                    const red = Math.round(255 * ratio);
+                    const redHex = red.toString(16).padStart(2, '0');
+                    hexColor = `#${redHex}0000`;
+                }
+                else{
+                    const green = Math.round(255 * ratio);
+                    const greebHex = red.toString(16).padStart(2, '0');
+                    hexColor = `#00${greenHex}00`;
+                }
             }
             return hexColor;
         }
