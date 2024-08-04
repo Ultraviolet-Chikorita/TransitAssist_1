@@ -557,13 +557,13 @@
                         let routeDiv = document.createElement('div');
                         routeDiv.classList.add("route-selection-div");
                         if(i == 0){
-                            routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:30px 30px 0 0;border-bottom:0;display:flex;flex-direction:row;";
+                            routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:30px 30px 0 0;border-bottom:1px solid rgba(255,255,255,0.15);display:flex;flex-direction:row;";
                         }
                         else if(i == routes.length - 1){
                             routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:0 0 30px 30px;border-top:0;display:flex;flex-direction:row;";
                         }
                         else{
-                            routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-bottom:0;border-top:0;display:flex;flex-direction:row;";
+                            routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-bottom:1px solid rgba(255,255,255,0.15);border-top:0;display:flex;flex-direction:row;";
                         }
                         
                         routeDivs.push(routeDiv);
@@ -605,7 +605,7 @@
                             else{
                                 routeDivs[j].style.border = "0";
                             }
-                            if(j != routeDivs.length - 1){
+                            if(j != routeDivs.length - 1 && j != routeId){
                                 routeDivs[j].style.borderBottom = "1px solid rgba(255,255,255,0.15)";
                             }
                         }
