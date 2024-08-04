@@ -582,6 +582,19 @@
                     startTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
                     startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p>`;
                     routeDivs[i].appendChild(startTimeDiv);
+                    let endTimeDiv = document.createElement('div');
+                    endTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    endTimeDiv.innerHTML = `<p>End time</p><p>${routes[i].legs[0].arrival_time.text}</p>`;
+                    routeDivs[i].appendChild(endTimeDiv);
+                    let inaccessibilitiesDiv = document.createElement('div');
+                    inaccessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    inaccessibilitiesDiv.innerHTML = `<p>Inaccessibilities</p><p>${routes[i].legs[0].numIssues}</p>`;
+                    routeDivs[i].appendChild(inaccessibilitiesDiv);
+                    let accessibilitiesDiv = document.createElement('div');
+                    accessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    accessibilitiesDiv.innerHTML = `<p>Accessibilities</p><p>${routes[i].legs[0].numSuccesses}</p>`;
+                    routeDivs[i].appendChild(accessibilitiesDiv);
+                    routeDivs[i].dataset.routeId = i;
                     routeDivs[i].addEventListener('mouseover', function () {
                         this.style.backgroundColor = "#000";
                     });
@@ -589,6 +602,7 @@
                         this.style.backgroundColor = "#18151E";
                     });
                 }
+                document.getElementById("show-overlay-btn").click();
                 
             }
         });
