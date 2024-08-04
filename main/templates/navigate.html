@@ -530,20 +530,59 @@
                 map.directionsRenderers = [];
                 routes = await processRoutes(res);
                 console.log(routes);
-                for (const [index, route] of result.routes.entries()) {
+                routes.forEach((route, index) => {
                     const renderer = new google.maps.DirectionsRenderer({
                         map: map,
-                        directions: result,
-                        routeIndex: index, // Specify the route index to display
+                        directions: res,
+                        routeIndex: index,
                         polylineOptions: {
-                            strokeColor: "#000",
+                            strokeColor: index === 0 ? '#0000FF' : '#A9A9A9', // Highlight the best route in blue, others in grey
                             strokeOpacity: 0.7,
-                            strokeWeight: 5
+                            strokeWeight: 6,
                         },
-                        suppressMarkers: true // Suppress default markers
+                        suppressMarkers: true, // Suppress the default markers
                     });
+
+                    // Store each renderer in the map's renderers array
                     map.directionsRenderers.push(renderer);
-                }
+
+                    // Create custom markers for each route
+                    route.legs[0].steps.forEach((step, stepIndex) => {
+                        if (stepIndex === 0) {
+                            // Start marker
+                            new google.maps.Marker({
+                                position: step.start_location,
+                                map: map,
+                                label: 'A',
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    scale: 8,
+                                    fillColor: '#00FF00',
+                                    fillOpacity: 1,
+                                    strokeColor: '#000000',
+                                    strokeWeight: 2,
+                                },
+                            });
+                        }
+
+                        if (stepIndex === route.legs[0].steps.length - 1) {
+                            // End marker
+                            new google.maps.Marker({
+                                position: step.end_location,
+                                map: map,
+                                label: 'B',
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    scale: 8,
+                                    fillColor: '#FF0000',
+                                    fillOpacity: 1,
+                                    strokeColor: '#000000',
+                                    strokeWeight: 2,
+                                },
+                            });
+                        }
+                    });
+                });
             }
         });
     </script>
