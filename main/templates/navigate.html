@@ -147,7 +147,7 @@
             </div>
         </div>
         <div style="width:70%;height:100%;display:flex;background-color: orange;">
-            <div id="route-info" style="width:80%;background-color: #18151E;border-radius: 30px;height:7vh;margin-top:40px;display: flex;align-items: center;flex-direction: row;padding:20px;font-size:30px;"><i style="color:gray; font-size: 20px;">Choose a journey on the left</i></div>
+            <div id="route-info" style="width:80%;background-color: #18151E;border-radius: 30px;height:7vh;margin-top:40px;display: flex;align-items: center;flex-direction: row;padding:20px;font-size:20px;"><i style="color:gray; font-size: 20px;">Choose a journey on the left</i></div>
             <div id="map" style="width:100%;height:100%;padding: 0;margin: 0;"></div>
         </div>
     </div>
@@ -626,8 +626,16 @@
                         document.getElementById("route-info").appendChild(accessibilitiesDiv);
                         let changeRouteDiv = document.createElement('div');
                         changeRouteDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;padding-right:20px;align-items:center;justify-content:center;";
-                        changeRouteDiv.innerHTML = `<button style="width:80%;height:80%;background-color:#282530;border-radius:40px;border:1px solid rgba(255,255,255,0.1);color:white;" onclick='document.getElementById("show-overlay-btn").click();'>Change route</button>`;
+                        changeRouteDiv.innerHTML = `<button style="font-size:18px;width:80%;height:80%;background-color:#282530;border-radius:40px;border:1px solid rgba(255,255,255,0.1);color:white;" onclick='document.getElementById("show-overlay-btn").click();'>Change route</button>`;
                         document.getElementById("route-info").appendChild(changeRouteDiv);
+                        for(var j=0;j<map.directionsRenderers.length;j++){
+                            if(j == routeId){
+                                map.directionsRenderers[j].setMap(map);
+                            }
+                            else{
+                                map.directionsRenderers[j].setMap(null);
+                            }
+                        }
                     })
                 }
                 document.getElementById("show-overlay-btn").click();
