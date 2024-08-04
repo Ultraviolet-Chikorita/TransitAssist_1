@@ -582,18 +582,14 @@
                     startTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
                     startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p>`;
                     routeDivs[i].appendChild(startTimeDiv);
+                    routeDivs[i].addEventListener('mouseover', function (ele) {
+                        ele.style.backgroundColor = "#000";
+                    });
+                    routeDivs[i].addEventListener('mouseout', function (ele) {
+                        ele.style.backgroundColor = "#18151E";
+                    });
                 }
-                var css = '.route-selection-div:hover{ background-color: #000 }';
-                var style = document.createElement('style');
-
-                if (style.styleSheet) {
-                    style.styleSheet.cssText = css;
-                } else {
-                    style.appendChild(document.createTextNode(css));
-                }
-
-                document.getElementsByTagName('head')[0].appendChild(style);
-                document.getElementById("show-overlay-btn").click();
+                
             }
         });
     </script>
