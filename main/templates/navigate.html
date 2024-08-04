@@ -147,7 +147,7 @@
             </div>
         </div>
         <div style="width:70%;height:100%;display:flex;background-color: orange;">
-            <div id="route-info" style="width:80%;background-color: #18151E;border-radius: 30px;height:10vh;margin-top:40px;display: flex;align-items: center;flex-direction: row;padding:20px;font-size:30px;"><i style="color:gray">Choose a journey on the left</i></div>
+            <div id="route-info" style="width:80%;background-color: #18151E;border-radius: 30px;height:10vh;margin-top:40px;display: flex;align-items: center;flex-direction: row;padding:20px;font-size:30px;"><i style="color:gray" style="font-size: 15px;">Choose a journey on the left</i></div>
             <div id="map" style="width:100%;height:100%;padding: 0;margin: 0;"></div>
         </div>
     </div>
@@ -575,19 +575,19 @@
                     document.getElementById("full-screen-overlay").appendChild(routeDivs[i]);
                     let startTimeDiv = document.createElement('div');
                     startTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                    startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p>`;
+                    startTimeDiv.innerHTML = `<div><p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p></div>`;
                     routeDivs[i].appendChild(startTimeDiv);
                     let endTimeDiv = document.createElement('div');
                     endTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                    endTimeDiv.innerHTML = `<p>End time</p><p>${routes[i].legs[0].arrival_time.text}</p>`;
+                    endTimeDiv.innerHTML = `<div><p>End time</p><p>${routes[i].legs[0].arrival_time.text}</p></div>`;
                     routeDivs[i].appendChild(endTimeDiv);
                     let inaccessibilitiesDiv = document.createElement('div');
                     inaccessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                    inaccessibilitiesDiv.innerHTML = `<p>Inaccessibilities</p><p>${routes[i].numIssues}</p>`;
+                    inaccessibilitiesDiv.innerHTML = `<div><p>Inaccessibilities</p><p>${routes[i].numIssues}</p></div>`;
                     routeDivs[i].appendChild(inaccessibilitiesDiv);
                     let accessibilitiesDiv = document.createElement('div');
                     accessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                    accessibilitiesDiv.innerHTML = `<p>Accessibilities</p><p>${routes[i].numSuccesses}</p>`;
+                    accessibilitiesDiv.innerHTML = `<div><p>Accessibilities</p><p>${routes[i].numSuccesses}</p></div>`;
                     routeDivs[i].appendChild(accessibilitiesDiv);
                     routeDivs[i].dataset.routeId = i;
                     routeDivs[i].addEventListener('mouseover', function () {
@@ -610,19 +610,19 @@
                         document.getElementById("route-info").innerHTML = "";
                         let startTimeDiv = document.createElement('div');
                         startTimeDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                        startTimeDiv.innerHTML = `<p>Start time</p><p>${route.legs[0].departure_time.text}</p>`;
+                        startTimeDiv.innerHTML = `<div><p>Start time</p><p>${route.legs[0].departure_time.text}</p></div>`;
                         document.getElementById("route-info").appendChild(startTimeDiv);
                         let endTimeDiv = document.createElement('div');
                         endTimeDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                        endTimeDiv.innerHTML = `<p>End time</p><p>${route.legs[0].arrival_time.text}</p>`;
+                        endTimeDiv.innerHTML = `<div><p>End time</p><p>${route.legs[0].arrival_time.text}</p></div>`;
                         document.getElementById("route-info").appendChild(endTimeDiv);
                         let inaccessibilitiesDiv = document.createElement('div');
                         inaccessibilitiesDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                        inaccessibilitiesDiv.innerHTML = `<p>Inaccessibilities</p><p>${route.numIssues}</p>`;
+                        inaccessibilitiesDiv.innerHTML = `<div><p>Inaccessibilities</p><p>${route.numIssues}</p></div>`;
                         document.getElementById("route-info").appendChild(inaccessibilitiesDiv);
                         let accessibilitiesDiv = document.createElement('div');
                         accessibilitiesDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                        accessibilitiesDiv.innerHTML = `<p>Accessibilities</p><p>${route.numSuccesses}</p>`;
+                        accessibilitiesDiv.innerHTML = `<div><p>Accessibilities</p><p>${route.numSuccesses}</p></div>`;
                         document.getElementById("route-info").appendChild(accessibilitiesDiv);
                         let changeRouteDiv = document.createElement('div');
                         changeRouteDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;padding-right:20px;align-items:center;justify-content:center;";
