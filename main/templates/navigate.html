@@ -264,7 +264,7 @@
                 directionsRenderer.setMap(map);
 
                 const card = document.getElementById("route-info");
-                map.controls[google.maps.ControlPosition.TOP_LEFT].push(card);
+                map.controls[google.maps.ControlPosition.TOP_CENTER].push(card);
 
                 const place1Autocomplete = new google.maps.places.PlaceAutocompleteElement();
                 place1Autocomplete.id = "place1-autocomplete-input";
