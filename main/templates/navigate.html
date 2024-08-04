@@ -562,24 +562,18 @@
                 }
                 else{
                     for(var i=0;i<routes.length;i++){
+                        let routeDiv = document.createElement('div');
+                        routeDiv.classList.add("route-selection-div");
                         if(i == 0){
-                            let routeDiv = document.createElement('div');
                             routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:30px 30px 0 0;border-bottom:0;";
-                            routeDiv.classList.add("route-selection-div");
-                            routeDivs.push(routeDiv);
                         }
                         else if(i == routes.length - 1){
-                            let routeDiv = document.createElement('div');
                             routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:0 0 30px 30px;border-top:0;";
-                            routeDiv.classList.add("route-selection-div");
-                            routeDivs.push(routeDiv);
                         }
                         else{
-                            let routeDiv = document.createElement('div');
                             routeDiv.style = "cursor:pointer;width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-bottom:0;border-top:0;";
-                            routeDiv.classList.add("route-selection-div");
-                            routeDivs.push(routeDiv);
                         }
+                        routeDivs.push(routeDiv);
                         
                     }
                 }
