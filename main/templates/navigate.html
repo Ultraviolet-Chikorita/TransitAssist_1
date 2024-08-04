@@ -97,6 +97,22 @@
             box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset, -15px -20px 24.8px rgba(77, 36, 243, 0.2) inset, -1px -1px 1.5px rgba(255, 255, 255, 0.3) inset, -3px -4px 9.4px rgba(157, 132, 255, 0.2) inset;
         }
 
+        #full-screen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+
     </style>
 </head>
 <body>
@@ -104,6 +120,7 @@
         <nav>
             <div class="logo"></div>
             <h1 style="font-size: 60px;">TransitAssist</h1>
+            <button id="show-overlay-btn" style="margin-left: 20px;">Show Overlay</button>
         </nav>
         <div style="margin-left:auto;margin-right:80px;height:5vh;display:flex;align-items:center;">
             <form id="logoutForm" action="{% url 'logout' %}" method="post">
@@ -130,6 +147,10 @@
         <div style="width:70%;height:100%;display:flex;background-color: orange;">
             <div id="map" style="width:100%;height:100%;padding: 0;margin: 0;"></div>
         </div>
+    </div>
+    <div id="full-screen-overlay" style="display: none;">
+        <button id="close-overlay-btn">Close</button>
+        <h1 style="color: #fff;">Full Screen Overlay</h1>
     </div>
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
         ({key: "AIzaSyCbZ2QUNhC61wdGwvKkjyTV4M3KkEKtX_E", v: "beta"});</script>
@@ -192,6 +213,20 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+
+            const showOverlayBtn = document.getElementById('show-overlay-btn');
+            const closeOverlayBtn = document.getElementById('close-overlay-btn');
+            const fullScreenOverlay = document.getElementById('full-screen-overlay');
+
+            showOverlayBtn.addEventListener('click', () => {
+                fullScreenOverlay.style.display = 'flex';
+            });
+
+            closeOverlayBtn.addEventListener('click', () => {
+                fullScreenOverlay.style.display = 'none';
+            });
+
+
 
             const response99 = await fetch("{% url 'get-map-settings' %}", {
                 method: "POST",
