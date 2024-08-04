@@ -213,11 +213,9 @@
                 }
                 let ratio = x / y;
                 ratio = Math.max(0, Math.min(1, ratio));
-                const red = Math.round(255 * ratio);
-                const green = Math.round(255 * (1 - ratio));
+                const red = Math.round(255 * ratio / (1 - ratio));
                 const redHex = red.toString(16).padStart(2, '0');
-                const greenHex = green.toString(16).padStart(2, '0');
-                hexColor = `#${redHex}${greenHex}00`;
+                hexColor = `#${redHex}0000`;
             }
             return hexColor;
         }
@@ -601,8 +599,8 @@
                         routeIndex: index,
                         polylineOptions: {
                             strokeColor: generateHexColor(route.numIssues, route.totalSteps), // Highlight the best route in blue, others in grey
-                            strokeOpacity: 0.6,
-                            strokeWeight: 4,
+                            strokeOpacity: 1,
+                            strokeWeight: 6,
                         },
                         suppressMarkers: true, // Suppress the default markers
                     });
