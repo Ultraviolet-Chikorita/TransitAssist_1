@@ -173,6 +173,7 @@
                     </div>
                 </div>
             </div>
+            <div id="route-steps" style="width:80%;padding:20px;height:88vh;display: flex;flex-direction: column;background-color: white;"></div>
         </div>
         <div style="width:70%;height:100%;display:flex;background-color: orange;">
             <div id="route-info" style="width:80%;background-color: #18151E;border-radius: 30px;height:7vh;margin-top:40px;display: flex;align-items: center;flex-direction: row;padding:20px;font-size:20px;"><i style="color:gray; font-size: 20px;">Choose a journey on the left</i></div>
@@ -214,17 +215,16 @@
                 let ratio = x / y;
                 ratio = Math.max(0, Math.min(1, ratio));
                 if(ratio > 0.5){
-                    const red = Math.round(255 * ratio);
+                    const red = Math.round(255 * (ratio - 0.5));
                     const redHex = red.toString(16).padStart(2, '0');
                     hexColor = `#${redHex}0000`;
                 }
                 else{
-                    const green = Math.round(255 * ratio);
+                    const green = Math.round(255 * (1-ratio));
                     const greenHex = green.toString(16).padStart(2, '0');
                     hexColor = `#00${greenHex}00`;
                 }
             }
-            console.log(hexColor);
             return hexColor;
         }
 
