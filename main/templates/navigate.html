@@ -112,9 +112,7 @@
             z-index: 1000;
         }
 
-        .route-selection-div:hover{
-            background-color: #000;
-        }
+        
     </style>
 </head>
 <body>
@@ -585,6 +583,16 @@
                     startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p>`;
                     routeDivs[i].appendChild(startTimeDiv);
                 }
+                var css = '.route-selection-div:hover{ background-color: #000 }';
+                var style = document.createElement('style');
+
+                if (style.styleSheet) {
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(document.createTextNode(css));
+                }
+
+                document.getElementsByTagName('head')[0].appendChild(style);
                 document.getElementById("show-overlay-btn").click();
             }
         });
