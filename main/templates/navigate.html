@@ -434,14 +434,13 @@
                     let currRoute = initialRouteList[i];
                     currRoute.numIssues = 0;
                     currRoute.numSuccesses = 0;
+                    currRoute.totalSteps = 0;
                     let mainInfo = currRoute.legs[0];
                     for(var j=0;j<mainInfo.steps.length;j++){
                         let currStep = mainInfo.steps[j];
                         if(currStep.travel_mode == "WALKING"){
                             for(var k=0;k<currStep.steps.length;k++){
                                 let currPart = currStep.steps[k];
-                                currPart.issues = [];
-                                currPart.successes = [];
                                 currPart.ids = [];
                                 const response1 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.start_location.lat}&lon=${currPart.start_location.lng}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
                                 const result1 = await response1.json();
@@ -477,10 +476,34 @@
                                 if(currPart.successes.length > 0){
                                     currRoute.numSuccesses += 1;
                                 }
+                                currRoute.totalSteps += 1;
                             }
                         }
                         else{
-
+                            currStep.ids = [currStep.transit.departure_stop.name + " ||| " + currStep.transit.line.agencies[0].name, currStep.transit.arrival_stop.name + " ||| " + currStep.transit.line.agencies[0].name];
+                            const response1 = await fetch("{% url 'get-issues' %}", {
+                                method: "POST",
+                                cache: "no-cache",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                body: JSON.stringify({"places": currStep.ids}),
+                            });
+                            const result1 = await response1.json();
+                            currPart.issues = result1["data"];
+                            const response2 = await fetch("{% url 'get-goods' %}", {
+                                method: "POST",
+                                cache: "no-cache",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                body: JSON.stringify({"places": currStep.ids}),
+                            });
+                            const result2 = await response2.json();
+                            currPart.successes = result2["data"];
+                            currRoute.totalSteps += 1;
                         }
                     }
                 }
