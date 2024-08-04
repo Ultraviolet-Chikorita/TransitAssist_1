@@ -588,11 +588,12 @@
                     routeDivs[i].appendChild(endTimeDiv);
                     let inaccessibilitiesDiv = document.createElement('div');
                     inaccessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                    inaccessibilitiesDiv.innerHTML = `<p>Inaccessibilities</p><p>${routes[i].legs[0].numIssues}</p>`;
+                    console.log(routes[i]);
+                    inaccessibilitiesDiv.innerHTML = `<p>Inaccessibilities</p><p>${routes[i].numIssues}</p>`;
                     routeDivs[i].appendChild(inaccessibilitiesDiv);
                     let accessibilitiesDiv = document.createElement('div');
                     accessibilitiesDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                    accessibilitiesDiv.innerHTML = `<p>Accessibilities</p><p>${routes[i].legs[0].numSuccesses}</p>`;
+                    accessibilitiesDiv.innerHTML = `<p>Accessibilities</p><p>${routes[i].numSuccesses}</p>`;
                     routeDivs[i].appendChild(accessibilitiesDiv);
                     routeDivs[i].dataset.routeId = i;
                     routeDivs[i].addEventListener('mouseover', function () {
