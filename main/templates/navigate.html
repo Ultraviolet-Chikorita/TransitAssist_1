@@ -471,6 +471,12 @@
                                 });
                                 const result4 = await response4.json();
                                 currPart.successes = result4["data"];
+                                if(currPart.issues.length > 0){
+                                    currRoute.numIssues += 1;
+                                }
+                                if(currPart.successes.length > 0){
+                                    currRoute.numSuccesses += 1;
+                                }
                             }
                         }
                         else{
