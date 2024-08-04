@@ -536,7 +536,7 @@
                         directions: res,
                         routeIndex: index,
                         polylineOptions: {
-                            strokeColor: index === 0 ? '#0000FF' : '#A9A9A9', // Highlight the best route in blue, others in grey
+                            strokeColor: (index == 0) ? '#0000FF' : '#A9A9A9', // Highlight the best route in blue, others in grey
                             strokeOpacity: 0.7,
                             strokeWeight: 6,
                         },
@@ -545,43 +545,6 @@
 
                     // Store each renderer in the map's renderers array
                     map.directionsRenderers.push(renderer);
-
-                    // Create custom markers for each route
-                    route.legs[0].steps.forEach((step, stepIndex) => {
-                        if (stepIndex === 0) {
-                            // Start marker
-                            new google.maps.Marker({
-                                position: step.start_location,
-                                map: map,
-                                label: 'A',
-                                icon: {
-                                    path: google.maps.SymbolPath.CIRCLE,
-                                    scale: 8,
-                                    fillColor: '#00FF00',
-                                    fillOpacity: 1,
-                                    strokeColor: '#000000',
-                                    strokeWeight: 2,
-                                },
-                            });
-                        }
-
-                        if (stepIndex === route.legs[0].steps.length - 1) {
-                            // End marker
-                            new google.maps.Marker({
-                                position: step.end_location,
-                                map: map,
-                                label: 'B',
-                                icon: {
-                                    path: google.maps.SymbolPath.CIRCLE,
-                                    scale: 8,
-                                    fillColor: '#FF0000',
-                                    fillOpacity: 1,
-                                    strokeColor: '#000000',
-                                    strokeWeight: 2,
-                                },
-                            });
-                        }
-                    });
                 });
             }
         });
