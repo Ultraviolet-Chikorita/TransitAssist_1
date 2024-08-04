@@ -442,9 +442,9 @@
 
             async function processRoutes(res){
                 let initialRouteList = JSON.parse(JSON.stringify(res.routes));
-                console.log(initialRouteList);
                 for(var i=0;i<initialRouteList.length;i++){
-
+                    let mainInfo = initialRouteList[i].legs[0];
+                    console.log(mainInfo);
                 }
 
             }
