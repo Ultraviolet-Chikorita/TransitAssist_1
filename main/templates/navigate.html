@@ -582,11 +582,11 @@
                     startTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
                     startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p>`;
                     routeDivs[i].appendChild(startTimeDiv);
-                    routeDivs[i].addEventListener('mouseover', function (ele) {
-                        ele.style.backgroundColor = "#000";
+                    routeDivs[i].addEventListener('mouseover', function () {
+                        this.style.backgroundColor = "#000";
                     });
-                    routeDivs[i].addEventListener('mouseout', function (ele) {
-                        ele.style.backgroundColor = "#18151E";
+                    routeDivs[i].addEventListener('mouseout', function () {
+                        this.style.backgroundColor = "#18151E";
                     });
                 }
                 
