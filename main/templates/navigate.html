@@ -576,7 +576,8 @@
                         }
                         let startTimeDiv = document.createElement('div');
                         startTimeDiv = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
-                        startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i]}</p>`
+                        startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i]}</p>`;
+                        routeDiv.appendChild(startTimeDiv);
                         routeDivs.push(routeDiv);
                         
                     }
