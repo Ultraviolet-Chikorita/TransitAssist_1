@@ -147,6 +147,7 @@
             </div>
         </div>
         <div style="width:70%;height:100%;display:flex;background-color: orange;">
+            <div id="route-info" style="width:80%;background-color: #000;border-radius: 20px;height:15vh;"></div>
             <div id="map" style="width:100%;height:100%;padding: 0;margin: 0;"></div>
         </div>
     </div>
@@ -261,6 +262,9 @@
                 });
 
                 directionsRenderer.setMap(map);
+
+                const card = document.getElementById("route-info");
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(card);
 
                 const place1Autocomplete = new google.maps.places.PlaceAutocompleteElement();
                 place1Autocomplete.id = "place1-autocomplete-input";
