@@ -550,6 +550,42 @@
                     // Store each renderer in the map's renderers array
                     map.directionsRenderers.push(renderer);
                 });
+                let routeDivs = [];
+                if(routes.length == 1){
+                    let routeDiv = document.createElement('div');
+                    routeDiv.style = "width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:30px;";
+                    routeDiv.classList.add("route-selection-div");
+
+                    routeDivs = [routeDiv];
+                }
+                else{
+                    for(var i=0;i<routes.length;i++){
+                        if(i == 0){
+                            let routeDiv = document.createElement('div');
+                            routeDiv.style = "width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:30px 30px 0 0;border-bottom:0;";
+                            routeDiv.classList.add("route-selection-div");
+                            routeDivs.push(routeDiv);
+                        }
+                        else if(i == routes.length - 1){
+                            let routeDiv = document.createElement('div');
+                            routeDiv.style = "width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-radius:0 0 30px 30px;border-top:0;";
+                            routeDiv.classList.add("route-selection-div");
+                            routeDivs.push(routeDiv);
+                        }
+                        else{
+                            let routeDiv = document.createElement('div');
+                            routeDiv.style = "width:60%;height:10vh;background-color: #18151E;border: 1px solid rgba(255, 255, 255, 0.2);border-bottom:0;border-top:0;";
+                            routeDiv.classList.add("route-selection-div");
+                            routeDivs.push(routeDiv);
+                        }
+                        
+                    }
+                }
+                document.getElementById("full-screen-overlay").innerHTML = "";
+                for(var i=0; i<routeDivs.length; i++){
+                    document.getElementById("full-screen-overlay").appendChild(routeDivs[i]);
+                }
+                document.getElementById("show-overlay-btn").click();
             }
         });
     </script>
