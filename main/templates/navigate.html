@@ -600,10 +600,13 @@
                         let routeId = this.dataset.routeId;
                         for(var j=0; j<routeDivs.length; j++){
                             if(j == routeId){
-                                routeDivs[j].style.border = "1px solid rgba(255,255,255,0.3)";
+                                routeDivs[j].style.border = "2px solid rgba(255,255,255,0.4)";
                             }
                             else{
                                 routeDivs[j].style.border = "0";
+                            }
+                            if(j != routeDivs.length - 1){
+                                routeDivs[j].style.borderBottom = "1px solid rgba(255,255,255,0.15)";
                             }
                         }
                         route = routes[routeId];
