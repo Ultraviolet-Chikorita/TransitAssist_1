@@ -449,7 +449,28 @@
                                 const response2 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.end_location.lat}&lon=${currPart.end_location.lng}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
                                 const result2 = await response2.json();
                                 currPart.ids.push(result2.results[0].place_id);
-                                console.log(currPart);
+                                const response3 = await fetch("{% url 'get-issues' %}", {
+                                    method: "POST",
+                                    cache: "no-cache",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'X-CSRFToken': '{{ csrf_token }}'
+                                    },
+                                    body: JSON.stringify({"places": currPart.ids}),
+                                });
+                                const result3 = await response3.json();
+                                currPart.issues = result3["data"];
+                                const response4 = await fetch("{% url 'get-goods' %}", {
+                                    method: "POST",
+                                    cache: "no-cache",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'X-CSRFToken': '{{ csrf_token }}'
+                                    },
+                                    body: JSON.stringify({"places": currPart.ids}),
+                                });
+                                const result4 = await response4.json();
+                                currPart.successes = result4["data"];
                             }
                         }
                         else{
@@ -457,6 +478,7 @@
                         }
                     }
                 }
+                console.log(initialRouteList);
 
             }
 
