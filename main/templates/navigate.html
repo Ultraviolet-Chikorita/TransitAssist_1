@@ -535,7 +535,6 @@
                 }
                 map.directionsRenderers = [];
                 routes = await processRoutes(res);
-                console.log(routes);
                 routes.forEach((route, index) => {
                     const renderer = new google.maps.DirectionsRenderer({
                         map: map,
@@ -562,7 +561,6 @@
                 }
                 else{
                     for(var i=0;i<routes.length;i++){
-                        console.log(routes[i]);
                         let routeDiv = document.createElement('div');
                         routeDiv.classList.add("route-selection-div");
                         if(i == 0){
@@ -583,7 +581,7 @@
                 for(var i=0; i<routeDivs.length; i++){
                     document.getElementById("full-screen-overlay").appendChild(routeDivs[i]);
                     let startTimeDiv = document.createElement('div');
-                    startTimeDiv = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
+                    startTimeDiv.style = "width:25%;height:100%;display:flex;flex-direction:column;padding-left:20px;";
                     startTimeDiv.innerHTML = `<p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p>`;
                     routeDivs[i].appendChild(startTimeDiv);
                 }
