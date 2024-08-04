@@ -495,11 +495,22 @@
                             });
                             const result2 = await response2.json();
                             currStep.successes = result2["data"];
+                            if(currStep.issues.length > 0){
+                                currRoute.numIssues += 1;
+                            }
+                            if(currStep.successes.length > 0){
+                                currRoute.numSuccesses += 1;
+                            }
                             currRoute.totalSteps += 1;
                         }
                     }
                 }
-                console.log(initialRouteList);
+                if(accessibility){
+                    initialRouteList.sort(function(x, y) {
+                        return x.numIssues - y.numIssues + 0.5*(y.numSuccesses - x.numSuccesses);
+                    });
+                }
+                return initialRouteList;
 
             }
 
@@ -511,7 +522,8 @@
                 } catch {
                 }
                 map.directionsRenderers = [];
-                processRoutes(res);
+                routes = processRoutes(res);
+                console.log(routes);
             }
         });
     </script>
