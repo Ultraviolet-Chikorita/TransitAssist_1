@@ -522,7 +522,7 @@
                 } catch {
                 }
                 map.directionsRenderers = [];
-                routes = processRoutes(res);
+                routes = await processRoutes(res);
                 console.log(routes);
             }
         });
