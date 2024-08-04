@@ -170,13 +170,6 @@
         let autosave = false;
         let directionsService;
         let directionsRenderer;
-        let routes = [];
-        let curr_route_accessibility_check = [];
-        let route_accessibility_check = [];
-        let curr_numIssues = [];
-        let numIssues = [];
-        let curr_numGoods = [];
-        let numGoods = [];
 
         function generateHexColor(x, y) {
             var hexColor = "#000000";
@@ -398,11 +391,6 @@
                 accessibility = result199["accessibility"];
                 autosave = result199["autosave"];
 
-                curr_route_accessibility_check = [];
-                route_accessibility_check = [];
-                curr_numIssues = [];
-                numIssues = [];
-
 
                 let request = {
                     origin: origin.location,
@@ -443,13 +431,36 @@
             async function processRoutes(res){
                 let initialRouteList = JSON.parse(JSON.stringify(res.routes));
                 for(var i=0;i<initialRouteList.length;i++){
-                    let mainInfo = initialRouteList[i].legs[0];
-                    console.log(mainInfo);
+                    let currRoute = initialRouteList[i];
+                    currRoute.numIssues = 0;
+                    currRoute.numSuccesses = 0;
+                    let mainInfo = currRoute.legs[0];
+                    for(var j=0;j<mainInfo.steps.length;j++){
+                        let currStep = mainInfo.steps[j];
+                        if(currStep.travel_mode == "WALKING"){
+                            for(var k=0;k<currStep.steps.length;k++){
+                                let currPart = currStep.steps[k];
+                                currPart.issues = [];
+                                currPart.successes = [];
+                                console.log(currPart);
+                            }
+                        }
+                        else{
+
+                        }
+                    }
                 }
 
             }
 
             async function displayRoutes(res){
+                try {
+                    map.directionsRenderers.forEach((r, i) => {
+                        r.setMap(null);
+                    });
+                } catch {
+                }
+                map.directionsRenderers = [];
                 processRoutes(res);
             }
         });
