@@ -295,8 +295,8 @@
         <div style="margin-left:auto;margin-right:80px;height:5vh;display:flex;align-items:center;">
             <form id="logoutForm" action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
-                <div class="logoutbtn-parent">
-                    <div class="logoutbtn" onclick="document.getElementById('logoutForm').submit()">
+                <div class="logoutbtn-parent" onclick="document.getElementById('logoutForm').submit()">
+                    <div class="logoutbtn">
                         <div>Logout</div>
                     </div>
                 </div>
