@@ -5,7 +5,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    phone_number = PhoneNumberField(blank=True)
+    phone_number = PhoneNumberField(null=True)
 
     def __str__(self):
         return self.username
