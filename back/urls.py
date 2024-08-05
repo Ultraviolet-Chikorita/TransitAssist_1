@@ -40,4 +40,5 @@ urlpatterns = [
     path("home-contact/", views.home_contact, name="home-contact"),
     path("get-saved-routes/", views.get_saved_routes, name="get-saved-routes"),
     path("navigate/", views.navigate, name="navigate"),
+    path("mark-route-as-saved/", views.mark_route_as_saved, name="mark-route-as-saved"),
 ]

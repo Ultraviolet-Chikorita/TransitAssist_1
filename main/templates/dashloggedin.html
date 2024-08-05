@@ -539,7 +539,7 @@
                                 <div><b>{{route.start}}</b></div>
                             </div>
                             <div style="display:flex;margin-left: auto;flex-direction: column;width:10%;">
-                                <button style="width:100%;padding:5px;border-radius:20px;border:none;background-color:#282530;text-align:center;color:white;font-weight:bold;padding-top:9px;padding-bottom:10px;font-size:20px;border:1px solid rgba(255,255,255,0.15)">SAVE</button>
+                                <button id="saveUnsaved" data-id="{{route.id}}" style="cursor:pointer;width:100%;padding:5px;border-radius:20px;border:none;background-color:#282530;text-align:center;color:white;font-weight:bold;padding-top:9px;padding-bottom:10px;font-size:20px;border:1px solid rgba(255,255,255,0.15)">SAVE</button>
                             </div>
                         {% else %}
                         <div style="display:flex;margin-left: 20px;flex-direction: row;color:#b7b7b7">
@@ -610,6 +610,26 @@
             document.getElementById("content-holder").style = content_holder_standard;
     
 
+            try{
+                document.getElementById("saveUnsaved").addEventListener('click', async function(){
+                    let id = this.dataset.id;
+                    fetch("{% url 'mark-route-as-saved' %}", {
+                        method: "POST",
+                        cache: "no-cache",
+                        headers: {
+                            "Content-Type": "application/json",
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({"id": id}),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        location.reload();
+                    });
+                });
+            }
+            catch(error){
+            }
 
 
 

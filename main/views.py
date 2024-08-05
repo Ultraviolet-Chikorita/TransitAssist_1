@@ -234,6 +234,16 @@ def get_map_settings(request):
 def navigate(request):
     if request.user.is_authenticated:
         return render(request, 'navigate.html')
+    return redirect('login')
+
+def mark_route_as_saved(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        id = data.get("id")
+        routeToSave = userRoutes.objects.filter(id=int(id))[0]
+        routeToSave.saved = True
+        routeToSave.save()
+        return JsonResponse({"status": "OK"})
 
 
 def home(request):
@@ -261,7 +271,7 @@ def home(request):
             processedSavedRoutes.append({"start": route.start, "end": route.end, "date": route.time.strftime("%d/%m/%Y")})
         try:
             unsavedRoute = list(user.routes.filter(saved=False))[-1]
-            processedRoute = {"start": unsavedRoute.start, "end": unsavedRoute.end, "date":unsavedRoute.time.strftime("%d/%m/%Y")}
+            processedRoute = {"id": unsavedRoute.id, "start": unsavedRoute.start, "end": unsavedRoute.end, "date":unsavedRoute.time.strftime("%d/%m/%Y")}
         except:
             processedRoute = {"start": ""}
         return render(request, "dashloggedin.html", {'route': processedRoute, 'savedroutes': processedSavedRoutes ,'firstname': firstname, 'lastname': lastname, 'phone': phonenumber, 'email': email, 'floors': floors, 'wheels': wheels, 'animals': animals, 'braille': braille, 'elevators': elevators, 'challenge': challenge, 'accessibility': accessibility, 'autosave': autosave})
