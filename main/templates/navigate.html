@@ -789,7 +789,7 @@
                                     }
                                 }
                             })
-                            stepDiv.style = "cursor:pointer;display:flex;flex-direction:column;margin-top:20px;margin-bottom:5px;width:95%;box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset;border: 1px rgba(255, 255, 255, 0.1);height:fit-content;border-radius: 20px;align-items: center;background-color: #4D24F34d;";
+                            stepDiv.style = "cursor:pointer;display:flex;flex-direction:column;margin-top:20px;margin-bottom:5px;width:95%;box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset;border: 1px rgba(255, 255, 255, 0.1);height:fit-content;border-radius: 20px;align-items: center;background-color: #000;color: rgba(255,255,255,0.5);";
                             let stepTopRow = document.createElement('div');
                             stepDiv.appendChild(stepTopRow);
                             stepTopRow.style = "display:flex;margin:20px;border-bottom: 1px solid rgba(255,255,255,0.15);flex-direction: row;width:90%;padding-bottom:10px;height:5vh;";
@@ -870,7 +870,7 @@
                                     buttonsContainer.style = "margin-top:5px;display:flex;flex-direction:row;width:100%;margin-left: 20px;";
                                     let reportIssueButton = document.createElement('button');
                                     buttonsContainer.appendChild(reportIssueButton);
-                                    reportIssueButton.style = "margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
+                                    reportIssueButton.style = "display:none;margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportIssueButton.innerHTML = "Report Issue";
                                     reportIssueButton.dataset.place1 = currSubStep.ids[0];
                                     reportIssueButton.dataset.place2 = currSubStep.ids[1];
@@ -894,7 +894,7 @@
                                     });
                                     let reportSuccessButton = document.createElement('button');
                                     buttonsContainer.appendChild(reportSuccessButton);
-                                    reportSuccessButton.style = "background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
+                                    reportSuccessButton.style = "display:none;background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportSuccessButton.innerHTML = "Report Success";
                                     reportSuccessButton.dataset.place1 = currSubStep.ids[0];
                                     reportSuccessButton.dataset.place2 = currSubStep.ids[1];
@@ -973,7 +973,7 @@
                                     buttonsContainer.style = "margin-top:5px;display:flex;flex-direction:row;width:100%;margin-left: 20px;";
                                     let reportIssueButton = document.createElement('button');
                                     buttonsContainer.appendChild(reportIssueButton);
-                                    reportIssueButton.style = "margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
+                                    reportIssueButton.style = "display:none;margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportIssueButton.innerHTML = "Report Issue";
                                     reportIssueButton.dataset.place1 = currStep.ids[k];
                                     reportIssueButton.addEventListener('mouseover', function(){
@@ -995,7 +995,7 @@
                                     });
                                     let reportSuccessButton = document.createElement('button');
                                     buttonsContainer.appendChild(reportSuccessButton);
-                                    reportSuccessButton.style = "background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
+                                    reportSuccessButton.style = "display:none;background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportSuccessButton.innerHTML = "Report Success";
                                     reportSuccessButton.dataset.place1 = currStep.ids[k];
                                     reportSuccessButton.addEventListener('mouseover', function(){
