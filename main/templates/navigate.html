@@ -740,7 +740,7 @@
                             let currStep = route.legs[0].steps[j];
                             let stepDiv = document.createElement('div');
                             document.getElementById("route-steps").appendChild(stepDiv);
-                            stepDiv.style = "display:flex;flex-direction:column;margin-top:20px;width:95%;box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset;border: 1px rgba(255, 255, 255, 0.1);height:fit-content;border-radius: 20px;align-items: center;background-color: #4D24F34d;";
+                            stepDiv.style = "display:flex;flex-direction:column;margin-top:20px;margin-bottom:5px;width:95%;box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset;border: 1px rgba(255, 255, 255, 0.1);height:fit-content;border-radius: 20px;align-items: center;background-color: #4D24F34d;";
                             let stepTopRow = document.createElement('div');
                             stepDiv.appendChild(stepTopRow);
                             stepTopRow.style = "display:flex;margin:20px;border-bottom: 1px solid rgba(255,255,255,0.15);flex-direction: row;width:90%;padding-bottom:10px;height:5vh;";
@@ -837,11 +837,11 @@
                                     reportSuccessButton.innerHTML = "Report Success";
                                     reportSuccessButton.addEventListener('mouseover', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,1)";
-                                        this.style.color = "rgba(237,165,58,1)";
+                                        this.style.color = "rgba(149,213,37,1)";
                                     });
                                     reportSuccessButton.addEventListener('mouseout', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,0.5)";
-                                        this.style.color = "rgba(237,165,58,0.5)";
+                                        this.style.color = "rgba(149,213,37,0.5)";
                                     });
                                 }
                             }
