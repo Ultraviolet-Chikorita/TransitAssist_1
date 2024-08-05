@@ -349,7 +349,11 @@
                                         </div>
                                         <div style="width:45%;padding:20px;padding-bottom: 0px;padding-top:30px;margin-left: auto;">
                                             <div class="input-container">
-                                                <input id="phone" type="text" required="" value="{{phone}}"/>
+                                                {% if phone != None %}
+                                                    <input id="phone" type="text" required="" value="{{phone}}"/>
+                                                {% else %}
+                                                    <input id="phone" type="text" required="" value=""/>
+                                                {% endif %}
                                                 <label>Phone Number</label>		
                                             </div>
                                         </div>
