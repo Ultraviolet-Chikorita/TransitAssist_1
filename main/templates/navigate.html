@@ -97,21 +97,8 @@
             box-shadow: 15px 20px 24.8px rgba(77, 36, 243, 0.2) inset, 1px 1px 1.5px rgba(255, 255, 255, 0.3) inset, 3px 4px 9.4px rgba(157, 132, 255, 0.2) inset, -15px -20px 24.8px rgba(77, 36, 243, 0.2) inset, -1px -1px 1.5px rgba(255, 255, 255, 0.3) inset, -3px -4px 9.4px rgba(157, 132, 255, 0.2) inset;
         }
 
-        #full-screen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
+        #full-screen-overlay,
+        #full-screen-overlay-2,
         #loading-overlay {
             position: fixed;
             top: 0;
@@ -204,12 +191,15 @@
         </div>
     </div>
     <div id="full-screen-overlay" style="display: none;" onclick="document.getElementById('close-overlay-btn').click()"></div>
+    <div id="full-screen-overlay-2" style="display: none;"></div>
     <div id="loading-overlay" style="display: none;">
         <img class="spinner" src="{% static 'logo.png' %}" style="width:200px;border-radius: 200px;"/>
         <h1 style="font-size:50px;">Loading</h1>
     </div>
     <button id="show-overlay-btn" style="display: none;"></button>
     <button id="close-overlay-btn" style="display:none;"></button>
+    <button id="show-overlay-2-btn" style="display: none;"></button>
+    <button id="close-overlay-2-btn" style="display:none;"></button>
     <button id="show-loading-btn" style="display: none;"></button>
     <button id="close-loading-btn" style="display:none;"></button>
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
@@ -280,6 +270,18 @@
 
             closeOverlayBtn.addEventListener('click', () => {
                 fullScreenOverlay.style.display = 'none';
+            });
+
+            const showOverlay2Btn = document.getElementById('show-overlay-2-btn');
+            const closeOverlay2Btn = document.getElementById('close-overlay-2-btn');
+            const fullScreenOverlay2 = document.getElementById('full-screen-overlay-2');
+
+            showOverlayBtn2.addEventListener('click', () => {
+                fullScreenOverlay2.style.display = 'flex';
+            });
+
+            closeOverlayBtn2.addEventListener('click', () => {
+                fullScreenOverlay2.style.display = 'none';
             });
 
             const showLoadingBtn = document.getElementById('show-loading-btn');
@@ -823,6 +825,8 @@
                                     buttonsContainer.appendChild(reportIssueButton);
                                     reportIssueButton.style = "margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportIssueButton.innerHTML = "Report Issue";
+                                    reportIssueButton.dataset.place1 = currSubStep.ids[0];
+                                    reportIssueButton.dataset.place2 = currSubStep.ids[1];
                                     reportIssueButton.addEventListener('mouseover', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,1)";
                                         this.style.color = "rgba(237,165,58,1)";
@@ -831,10 +835,23 @@
                                         this.style.backgroundColor = "rgba(67,37,179,0.5)";
                                         this.style.color = "rgba(237,165,58,0.5)";
                                     });
+                                    reportIssueButton.addEventListener('click', function(){
+                                        let place1 = this.dataset.place1;
+                                        let place2 = this.dataset.place2;
+                                        fullScreenOverlay2.innerHTML = '';
+                                        let formDiv = document.createElement('div');
+                                        fullScreenOverlay2.appendChild(formDiv);
+                                        formDiv.style = "padding:20px;display:flex;flex-direction:column;background-color:rgb(6,6,6);border:1px solid rgba(255,255,255,0.3);width:30%;height:fit-content;";
+                                        formDiv.innerHTML = `<h1 style='margin-bottom:10px'>Issue Report</h1><button style='width:60%;margin-bottom:10px;padding:5px;border-radius:30px;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.05)'>Uneven Road</button><button style='width:60%;margin-bottom:10px;padding:5px;border-radius:30px;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.05)'>High Floor</button><button style='width:60%;margin-bottom:10px;padding:5px;border-radius:30px;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.05)'>No Ramp</button><button style='width:60%;margin-bottom:10px;padding:5px;border-radius:30px;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.05)'>No Service Animals</button><button style='width:60%;margin-bottom:10px;padding:5px;border-radius:30px;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.05)'>No elevators</button>`;
+                                        
+                                        showOverlay2Btn.click();
+                                    });
                                     let reportSuccessButton = document.createElement('button');
                                     buttonsContainer.appendChild(reportSuccessButton);
                                     reportSuccessButton.style = "background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportSuccessButton.innerHTML = "Report Success";
+                                    reportSuccessButton.dataset.place1 = currSubStep.ids[0];
+                                    reportSuccessButton.dataset.place2 = currSubStep.ids[1];
                                     reportSuccessButton.addEventListener('mouseover', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,1)";
                                         this.style.color = "rgba(149,213,37,1)";
@@ -902,6 +919,7 @@
                                     buttonsContainer.appendChild(reportIssueButton);
                                     reportIssueButton.style = "margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportIssueButton.innerHTML = "Report Issue";
+                                    reportIssueButton.dataset.place1 = currStep.ids[k];
                                     reportIssueButton.addEventListener('mouseover', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,1)";
                                         this.style.color = "rgba(237,165,58,1)";
@@ -914,6 +932,7 @@
                                     buttonsContainer.appendChild(reportSuccessButton);
                                     reportSuccessButton.style = "background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportSuccessButton.innerHTML = "Report Success";
+                                    reportSuccessButton.dataset.place1 = currStep.ids[k];
                                     reportSuccessButton.addEventListener('mouseover', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,1)";
                                         this.style.color = "rgba(149,213,37,1)";
@@ -922,15 +941,13 @@
                                         this.style.backgroundColor = "rgba(67,37,179,0.5)";
                                         this.style.color = "rgba(149,213,37,0.5)";
                                     });
-                                }
-                                
+                                } 
                             }
                         }
                     })
                 }
                 closeLoadingBtn.click();
                 document.getElementById("show-overlay-btn").click();
-                
             }
         });
     </script>
