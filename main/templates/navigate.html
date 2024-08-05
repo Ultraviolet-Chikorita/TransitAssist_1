@@ -766,7 +766,7 @@
                             stepTopRowTime.innerHTML = currStep.duration.text;
                             let stepTopRowDistance = document.createElement('div');
                             stepTopRowRightElements.appendChild(stepTopRowDistance);
-                            stepTopRowDistance.style = "text-align: right";
+                            stepTopRowDistance.style = "text-align: right; color: rgba(255,255,255,0.5);";
                             stepTopRowDistance.innerHTML = currStep.distance.text;
                             let stepMainContent = document.createElement('div');
                             stepDiv.appendChild(stepMainContent);
@@ -846,6 +846,83 @@
                                 }
                             }
                             else{
+                                let point1 = currStep.transit.departure_time.text + " " + currStep.transit.line.name + " [" + currStep.transit.line.agencies[0].name + "] service from " + currStep.transit.departure_stop.name;
+                                let point2 = "Exit from " + currStep.transit.arrival_stop.name + " at " + currStep.transit.arrival_time.text;
+                                let points = [point1, point2];
+                                for(var k=0;k<points.length;k++){
+                                    let substepDiv = document.createElement('div');
+                                    stepMainContent.appendChild(substepDiv);
+                                    substepDiv.style = "display:flex;flex-direction: column;width:100%;margin-top:20px;";
+                                    let subStepInstructionDiv = document.createElement('div');
+                                    substepDiv.appendChild(subStepInstructionDiv);
+                                    subStepInstructionDiv.style = "display:flex;flex-direction:row;width: 100%;";
+                                    let subStepInstructionText = document.createElement('div');
+                                    subStepInstructionDiv.appendChild(subStepInstructionText);
+                                    subStepInstructionText.style = "width: 70%;margin-bottom:5px";
+                                    subStepInstructionText.innerHTML = point;
+                                    if(k==0){
+                                        let subStepInstructionTime = document.createElement('div');
+                                        subStepInstructionDiv.appendChild(subStepInstructionTime);
+                                        subStepInstructionTime.style.marginLeft = "auto";
+                                        subStepInstructionTime.innerHTML = currStep.duration.text;
+                                    }
+                                    for(var l=0;l<currStep.issues[k].length;l++){
+                                        let currWarning = currStep.issues[k][l];
+                                        let warningContainer = document.createElement('div');
+                                        substepDiv.appendChild(warningContainer);
+                                        warningContainer.style = "display:flex;flex-direction: row;width: 100%;margin-left: 20px;margin-bottom:5px;";
+                                        let warningImg = document.createElement('img');
+                                        warningContainer.appendChild(warningImg);
+                                        warningImg.src = '{% static "warning.png" %}';
+                                        warningImg.style.height = "20px";
+                                        let warningText = document.createElement('div');
+                                        warningContainer.appendChild(warningText);
+                                        warningText.style.color = "#ffb400";
+                                        warningText.innerHTML = `${currWarning[0]}(${currWarning[1]})`;
+                                    }
+                                    for(var l=0;l<currStep.successes[k].length;l++){
+                                        let currSuccess = currStep.successes[k][l];
+                                        let successContainer = document.createElement('div');
+                                        substepDiv.appendChild(successContainer);
+                                        successContainer.style = "margin-bottom:5px;display:flex;flex-direction: row;width: 100%;margin-left: 20px;";
+                                        let successImg = document.createElement('img');
+                                        successContainer.appendChild(successImg);
+                                        successImg.src = '{% static "tick.png" %}';
+                                        successImg.style.height = "20px";
+                                        let accessText = document.createElement('div');
+                                        successContainer.appendChild(accessText);
+                                        accessText.style.color = "#66bb6a";
+                                        accessText.innerHTML = `${currSuccess[0]}(${currSuccess[1]})`;
+                                    }
+                                    let buttonsContainer = document.createElement('div');
+                                    substepDiv.appendChild(buttonsContainer);
+                                    buttonsContainer.style = "margin-top:5px;display:flex;flex-direction:row;width:100%;margin-left: 20px;";
+                                    let reportIssueButton = document.createElement('button');
+                                    buttonsContainer.appendChild(reportIssueButton);
+                                    reportIssueButton.style = "margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
+                                    reportIssueButton.innerHTML = "Report Issue";
+                                    reportIssueButton.addEventListener('mouseover', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,1)";
+                                        this.style.color = "rgba(237,165,58,1)";
+                                    });
+                                    reportIssueButton.addEventListener('mouseout', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,0.5)";
+                                        this.style.color = "rgba(237,165,58,0.5)";
+                                    });
+                                    let reportSuccessButton = document.createElement('button');
+                                    buttonsContainer.appendChild(reportSuccessButton);
+                                    reportSuccessButton.style = "background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
+                                    reportSuccessButton.innerHTML = "Report Success";
+                                    reportSuccessButton.addEventListener('mouseover', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,1)";
+                                        this.style.color = "rgba(149,213,37,1)";
+                                    });
+                                    reportSuccessButton.addEventListener('mouseout', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,0.5)";
+                                        this.style.color = "rgba(149,213,37,0.5)";
+                                    });
+                                }
+                                
                             }
                         }
                     })
