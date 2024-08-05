@@ -821,12 +821,28 @@
                                     buttonsContainer.style = "margin-top:5px;display:flex;flex-direction:row;width:100%;margin-left: 20px;";
                                     let reportIssueButton = document.createElement('button');
                                     buttonsContainer.appendChild(reportIssueButton);
-                                    reportIssueButton.style = "background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
+                                    reportIssueButton.style = "margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportIssueButton.innerHTML = "Report Issue";
+                                    reportIssueButton.addEventListener('mouseover', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,1)";
+                                        this.style.color = "rgba(237,165,58,1)";
+                                    });
+                                    reportIssueButton.addEventListener('mouseout', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,0.5)";
+                                        this.style.color = "rgba(237,165,58,0.5)";
+                                    });
                                     let reportSuccessButton = document.createElement('button');
                                     buttonsContainer.appendChild(reportSuccessButton);
                                     reportSuccessButton.style = "background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportSuccessButton.innerHTML = "Report Success";
+                                    reportSuccessButton.addEventListener('mouseover', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,1)";
+                                        this.style.color = "rgba(237,165,58,1)";
+                                    });
+                                    reportSuccessButton.addEventListener('mouseout', function(){
+                                        this.style.backgroundColor = "rgba(67,37,179,0.5)";
+                                        this.style.color = "rgba(237,165,58,0.5)";
+                                    });
                                 }
                             }
                             else{
