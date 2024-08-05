@@ -850,6 +850,7 @@
                                 let point2 = "Exit from " + currStep.transit.arrival_stop.name + " at " + currStep.transit.arrival_time.text;
                                 let points = [point1, point2];
                                 for(var k=0;k<points.length;k++){
+                                    let point = points[k];
                                     let substepDiv = document.createElement('div');
                                     stepMainContent.appendChild(substepDiv);
                                     substepDiv.style = "display:flex;flex-direction: column;width:100%;margin-top:20px;";
