@@ -744,14 +744,22 @@
                         }
                         route = routes[routeId];
                         document.getElementById("route-info").innerHTML = "";
-                        let startTimeDiv = document.createElement('div');
-                        startTimeDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;justify-content:center;";
-                        startTimeDiv.innerHTML = `<div><p style="color:rgba(255,255,255,0.5)">Start time</p><p>${route.legs[0].departure_time.text}</p></div>`;
-                        document.getElementById("route-info").appendChild(startTimeDiv);
-                        let endTimeDiv = document.createElement('div');
-                        endTimeDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;justify-content:center;";
-                        endTimeDiv.innerHTML = `<div><p style="color:rgba(255,255,255,0.5)">End time</p><p>${route.legs[0].arrival_time.text}</p></div>`;
-                        document.getElementById("route-info").appendChild(endTimeDiv);
+                        try{
+                            let startTimeDiv = document.createElement('div');
+                            startTimeDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;justify-content:center;";
+                            startTimeDiv.innerHTML = `<div><p style="color:rgba(255,255,255,0.5)">Start time</p><p>${route.legs[0].departure_time.text}</p></div>`;
+                            document.getElementById("route-info").appendChild(startTimeDiv);
+                            let endTimeDiv = document.createElement('div');
+                            endTimeDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;justify-content:center;";
+                            endTimeDiv.innerHTML = `<div><p style="color:rgba(255,255,255,0.5)">End time</p><p>${route.legs[0].arrival_time.text}</p></div>`;
+                            document.getElementById("route-info").appendChild(endTimeDiv);
+                        }
+                        catch{
+                            let durationDiv = document.createElement('div');
+                            durationDiv.style = "width:40%;height:100%;display:flex;flex-direction:column;padding-left:20px;justify-content:center;";
+                            durationDiv.innerHTML = `<div><p style="color:rgba(255,255,255,0.5)">Duration</p><p>${route.legs[0].duration.text}</p></div>`;
+                            document.getElementById("route-info").appendChild(durationDiv);
+                        }
                         let inaccessibilitiesDiv = document.createElement('div');
                         inaccessibilitiesDiv.style = "width:20%;height:100%;display:flex;flex-direction:column;padding-left:20px;justify-content:center;";
                         inaccessibilitiesDiv.innerHTML = `<div><p style="color:rgba(255,255,255,0.5)">Inaccessibilities</p><p>${route.numIssues}</p></div>`;
