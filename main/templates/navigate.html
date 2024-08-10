@@ -699,13 +699,21 @@
                 for(var i=0; i<routeDivs.length; i++){
                     document.getElementById("full-screen-overlay").appendChild(routeDivs[i]);
                     let startTimeDiv = document.createElement('div');
-                    startTimeDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
-                    startTimeDiv.innerHTML = `<div><p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p></div>`;
-                    routeDivs[i].appendChild(startTimeDiv);
-                    let endTimeDiv = document.createElement('div');
-                    endTimeDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
-                    endTimeDiv.innerHTML = `<div><p>End time</p><p>${routes[i].legs[0].arrival_time.text}</p></div>`;
-                    routeDivs[i].appendChild(endTimeDiv);
+                    try{
+                        startTimeDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
+                        startTimeDiv.innerHTML = `<div><p>Start time</p><p>${routes[i].legs[0].departure_time.text}</p></div>`;
+                        routeDivs[i].appendChild(startTimeDiv);
+                        let endTimeDiv = document.createElement('div');
+                        endTimeDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
+                        endTimeDiv.innerHTML = `<div><p>End time</p><p>${routes[i].legs[0].arrival_time.text}</p></div>`;
+                        routeDivs[i].appendChild(endTimeDiv);
+                    }
+                    catch{
+                        durationDiv.style = "width: 50%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
+                        durationDiv.innerHTML = `<div><p>Duration</p><p>${routes[i].legs[0].duration.text}</p></div>`;
+                        routeDivs[i].appendChild(durationDiv);
+                    }
+                    
                     let inaccessibilitiesDiv = document.createElement('div');
                     inaccessibilitiesDiv.style = "width: 25%; height: 100%; display: flex; flex-direction: column; padding-left: 50px;justify-content:center;";
                     inaccessibilitiesDiv.innerHTML = `<div><p>Inaccessibilities</p><p>${routes[i].numIssues}</p></div>`;
