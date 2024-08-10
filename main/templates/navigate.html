@@ -502,9 +502,7 @@
                     destination: destination.location,
                     travelMode: 'TRANSIT',
                     provideRouteAlternatives: true,
-                    transitOptions: {
-                        routingPreference: 'LESS_WALKING'
-                    }
+                    
                 };
 
                 directionsService.route(request, async function(result, status) {
