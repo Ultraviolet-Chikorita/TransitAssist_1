@@ -317,12 +317,7 @@
                     body: JSON.stringify({"places": [place_1, place_2], "issue": issue}),
                 });
                 const result3 = await response3.json();
-                for(let i=0;i<routes.length;i++){
-                    let currRoute = routes[i];
-                    for(var j=0;j<currRoute.legs[0].steps.length;j++){
-
-                    }
-                }
+                console.log(result3);
 
                 document.getElementById('close-overlay-2-btn').click();
                 document.getElementById('show-loading-btn').click();
@@ -439,6 +434,7 @@
                     body: JSON.stringify({"places": [place_1, place_2], "good": good}),
                 });
                 const result3 = await response3.json();
+                console.log(result3);
                 document.getElementById('close-overlay-2-btn').click();
                 document.getElementById('show-loading-btn').click();
 
