@@ -847,15 +847,15 @@
             }
 
             async function displayRoutes(res, processed=false){
-                try {
-                    map.directionsRenderers.forEach((r, i) => {
-                        r.setMap(null);
-                    });
-                } catch {
-                }
-                map.directionsRenderers = [];
                 if(!processed){
                     routes = await processRoutes(res);
+                    map.directionsRenderers = [];
+                    try {
+                        map.directionsRenderers.forEach((r, i) => {
+                            r.setMap(null);
+                        });
+                    } catch {
+                    }
                     routes.forEach((route, index) => {
                         const renderer = new google.maps.DirectionsRenderer({
                             map: map,
