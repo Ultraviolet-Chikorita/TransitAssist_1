@@ -219,6 +219,8 @@
         let autosave = false;
         let directionsService;
         let directionsRenderer;
+        let routeDivs = [];
+        let routes = [];
 
         function generateHexColor(x, y) {
             var hexColor = "#000000";
@@ -242,23 +244,6 @@
             return hexColor;
         }
 
-        async function reportIssueTransit(sp){
-            let problem = prompt("Report an accessibility issue", "No escalator access");
-            if (problem == null || problem == "") {
-            } else {
-                const response3 = await fetch("{% url 'add-issue' %}", {
-                    method: "POST",
-                    cache: "no-cache",
-                    headers: {
-                        "Content-Type": "application/json",
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({"places": [sp.dataset.name], "issue": problem}),
-                });
-                const result3 = await response3.json();
-            }
-        }
-
         async function reportIssue(place_1, place_2, issue){
             const response3 = await fetch("{% url 'add-issue' %}", {
                 method: "POST",
@@ -270,7 +255,121 @@
                 body: JSON.stringify({"places": [place_1, place_2], "issue": issue}),
             });
             const result3 = await response3.json();
+            for(let i=0;i<routes.length;i++){
+                let currRoute = routes[i];
+                for(var j=0;j<currRoute.legs[0].steps.length;j++){
+
+                }
+            }
+
+
+            for(var i=0;i<routes.length;i++){
+                let currRoute = routes[i];
+                currRoute.numIssues = 0;
+                currRoute.numSuccesses = 0;
+                currRoute.totalSteps = 0;
+                let mainInfo = currRoute.legs[0];
+                for(var j=0;j<mainInfo.steps.length;j++){
+                    let currStep = mainInfo.steps[j];
+                    if(currStep.travel_mode == "WALKING"){
+                        for(var k=0;k<currStep.steps.length;k++){
+                            let currPart = currStep.steps[k];
+                            currPart.ids = [];
+                            const response1 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.start_location.lat}&lon=${currPart.start_location.lng}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
+                            const result1 = await response1.json();
+                            currPart.ids.push(result1.results[0].place_id);
+                            const response2 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.end_location.lat}&lon=${currPart.end_location.lng}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
+                            const result2 = await response2.json();
+                            currPart.ids.push(result2.results[0].place_id);
+                            const response3 = await fetch("{% url 'get-issues' %}", {
+                                method: "POST",
+                                cache: "no-cache",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                body: JSON.stringify({"places": currPart.ids}),
+                            });
+                            const result3 = await response3.json();
+                            currPart.issues = result3["data"];
+                            const response4 = await fetch("{% url 'get-goods' %}", {
+                                method: "POST",
+                                cache: "no-cache",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                body: JSON.stringify({"places": currPart.ids}),
+                            });
+                            const result4 = await response4.json();
+                            currPart.successes = result4["data"];
+                            if(currPart.issues.length > 0){
+                                currRoute.numIssues += 1;
+                            }
+                            if(currPart.successes.length > 0){
+                                currRoute.numSuccesses += 1;
+                            }
+                            currRoute.totalSteps += 1;
+                        }
+                    }
+                    else{
+                        currStep.ids = [currStep.transit.departure_stop.name + " ||| " + currStep.transit.line.agencies[0].name, currStep.transit.arrival_stop.name + " ||| " + currStep.transit.line.agencies[0].name];
+                        const response1 = await fetch("{% url 'get-issues' %}", {
+                            method: "POST",
+                            cache: "no-cache",
+                            headers: {
+                                "Content-Type": "application/json",
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({"places": [currStep.ids[0]]}),
+                        });
+                        const result1 = await response1.json();
+                        const response2 = await fetch("{% url 'get-issues' %}", {
+                            method: "POST",
+                            cache: "no-cache",
+                            headers: {
+                                "Content-Type": "application/json",
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({"places": [currStep.ids[1]]}),
+                        });
+                        const result2 = await response2.json();
+                        currStep.issues = [result1["data"], result2["data"]];
+                        const response3 = await fetch("{% url 'get-goods' %}", {
+                            method: "POST",
+                            cache: "no-cache",
+                            headers: {
+                                "Content-Type": "application/json",
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({"places": [currStep.ids[0]]}),
+                        });
+                        const result3 = await response3.json();
+                        const response4 = await fetch("{% url 'get-goods' %}", {
+                            method: "POST",
+                            cache: "no-cache",
+                            headers: {
+                                "Content-Type": "application/json",
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({"places": [currStep.ids[1]]}),
+                        });
+                        const result4 = await response4.json();
+                        currStep.successes = [result3["data"], result4["data"]];
+                        if(currStep.issues[0].length > 0 || currStep.issues[1].length > 0){
+                            currRoute.numIssues += 1;
+                        }
+                        if(currStep.successes[0].length > 0 || currStep.successes[1].length > 0){
+                            currRoute.numSuccesses += 1;
+                        }
+                        currRoute.totalSteps += 1;
+                    }
+                }
+            }
+
+
             document.getElementById('close-overlay-2-btn').click();
+            displayRoutes(routes, true);
         }
 
         async function reportSuccess(place_1, place_2, good){
@@ -292,6 +391,7 @@
             const showOverlayBtn = document.getElementById('show-overlay-btn');
             const closeOverlayBtn = document.getElementById('close-overlay-btn');
             const fullScreenOverlay = document.getElementById('full-screen-overlay');
+            
 
             showOverlayBtn.addEventListener('click', () => {
                 fullScreenOverlay.style.display = 'flex';
@@ -644,7 +744,7 @@
 
             }
 
-            async function displayRoutes(res){
+            async function displayRoutes(res, processed=false){
                 try {
                     map.directionsRenderers.forEach((r, i) => {
                         r.setMap(null);
@@ -652,7 +752,9 @@
                 } catch {
                 }
                 map.directionsRenderers = [];
-                routes = await processRoutes(res);
+                if(!processed){
+                    routes = await processRoutes(res);
+                }
                 routes.forEach((route, index) => {
                     const renderer = new google.maps.DirectionsRenderer({
                         map: map,
@@ -669,7 +771,7 @@
                     // Store each renderer in the map's renderers array
                     map.directionsRenderers.push(renderer);
                 });
-                let routeDivs = [];
+                routeDivs = [];
                 if(routes.length == 1){
                     let routeDiv = document.createElement('div');
                     routeDiv.style = style="cursor: pointer; width: 65%; height: 12vh; background-color: rgb(24, 21, 30); border: 0px; border-radius: 30px 30px 0px 0px; display: flex; flex-direction: row;";
@@ -856,10 +958,13 @@
                                         subStepInstructionDiv.appendChild(subStepInstructionTime);
                                         subStepInstructionTime.style.marginLeft = "auto";
                                         subStepInstructionTime.innerHTML = currSubStep.duration.text;
+                                        let statuses = document.createElement("div");
+                                        substepDiv.appendChild(statuses);
+                                        statuses.id = "statuses";
                                         for(var l=0;l<currSubStep.issues.length;l++){
                                             let currWarning = currSubStep.issues[l];
                                             let warningContainer = document.createElement('div');
-                                            substepDiv.appendChild(warningContainer);
+                                            statuses.appendChild(warningContainer);
                                             warningContainer.style = "display:flex;flex-direction: row;width: 100%;margin-left: 20px;margin-bottom:5px;";
                                             let warningImg = document.createElement('img');
                                             warningContainer.appendChild(warningImg);
@@ -873,7 +978,7 @@
                                         for(var l=0;l<currSubStep.successes.length;l++){
                                             let currSuccess = currSubStep.successes[l];
                                             let successContainer = document.createElement('div');
-                                            substepDiv.appendChild(successContainer);
+                                            statuses.appendChild(successContainer);
                                             successContainer.style = "margin-bottom:5px;display:flex;flex-direction: row;width: 100%;margin-left: 20px;";
                                             let successImg = document.createElement('img');
                                             successContainer.appendChild(successImg);
@@ -960,10 +1065,13 @@
                                         subStepInstructionTime.style.marginLeft = "auto";
                                         subStepInstructionTime.innerHTML = currStep.duration.text;
                                     }
+                                    let statuses = document.createElement("div");
+                                    substepDiv.appendChild(statuses);
+                                    statuses.id = "statuses";
                                     for(var l=0;l<currStep.issues[k].length;l++){
                                         let currWarning = currStep.issues[k][l];
                                         let warningContainer = document.createElement('div');
-                                        substepDiv.appendChild(warningContainer);
+                                        statuses.appendChild(warningContainer);
                                         warningContainer.style = "display:flex;flex-direction: row;width: 100%;margin-left: 20px;margin-bottom:5px;";
                                         let warningImg = document.createElement('img');
                                         warningContainer.appendChild(warningImg);
@@ -977,7 +1085,7 @@
                                     for(var l=0;l<currStep.successes[k].length;l++){
                                         let currSuccess = currStep.successes[k][l];
                                         let successContainer = document.createElement('div');
-                                        substepDiv.appendChild(successContainer);
+                                        statuses.appendChild(successContainer);
                                         successContainer.style = "margin-bottom:5px;display:flex;flex-direction: row;width: 100%;margin-left: 20px;";
                                         let successImg = document.createElement('img');
                                         successContainer.appendChild(successImg);
