@@ -278,7 +278,8 @@
             outline-offset: max(2px, 0.15em);
         }
 
-        #part-screen-overlay{
+        #part-screen-overlay,
+        #part-screen-overlay-2{
             position: fixed;
             top: 0;
             left: 0;
@@ -587,6 +588,11 @@
             <b>Error:&nbsp;</b><span id="errorMessage"></span>
         </div>
     </div>
+    <div id="part-screen-overlay-2" style="display: none;">
+        <div style="display:flex;width:fit-content;padding-left: 20px;justify-content: center;align-items: center;padding-right: 20px;height:5vh;background-color: #AF3333;border-radius: 10px; border: 2px solid rgba(255, 183, 183, 0.15);font-size: 20px;">
+            <b>Success:&nbsp;</b><span id="successMessage"></span>
+        </div>
+    </div>
     <script>
 
         const delay = ms => new Promise(res => setTimeout(res, ms));    
@@ -647,7 +653,7 @@
                     });
                 });
             }
-            catch(error){
+            catch{
             }
 
 
@@ -837,10 +843,16 @@
                     .then(response => response.json())
                     .then(async data => {
                         if(data.status == "OK"){
+                            document.getElementById("successMessage").innerHTML = "User details updated";
+                            document.getElementById("part-screen-overlay-2").style.display = "flex";
+                            document.getElementById("part-screen-overlay").style.display = "none";
+                            await delay(5000);
+                            document.getElementById("part-screen-overlay-2").style.display = "none";
                         }
                         else{
                             document.getElementById("errorMessage").innerHTML = data.msg;
                             document.getElementById("part-screen-overlay").style.display = "flex";
+                            document.getElementById("part-screen-overlay-2").style.display = "none";
                             await delay(5000);
                             document.getElementById("part-screen-overlay").style.display = "none";
                         }
@@ -864,7 +876,14 @@
                     body: JSON.stringify({ "lowfloorbuses": lowfloorbuses, "wheelchair": wheelchair, "serviceanimal": serviceanimal, "braille": braille, "elevators": elevators }),
                 })
                 .then(response => response.json())
-                .then(data => {
+                .then(async data => {
+                    if(data.status == "OK"){
+                        document.getElementById("successMessage").innerHTML = "Preferences updated";
+                        document.getElementById("part-screen-overlay-2").style.display = "flex";
+                        document.getElementById("part-screen-overlay").style.display = "none";
+                        await delay(5000);
+                        document.getElementById("part-screen-overlay-2").style.display = "none";
+                    }
                 });
             });
 
@@ -882,7 +901,14 @@
                     body: JSON.stringify({ "challenge": challenge, "accessibility": accessibility, "autosave": autosave}),
                 })
                 .then(response => response.json())
-                .then(data => {
+                .then(async data => {
+                    if(data.status == "OK"){
+                        document.getElementById("successMessage").innerHTML = "Map settings updated";
+                        document.getElementById("part-screen-overlay-2").style.display = "flex";
+                        document.getElementById("part-screen-overlay").style.display = "none";
+                        await delay(5000);
+                        document.getElementById("part-screen-overlay-2").style.display = "none";
+                    }
                 });
             });
         });
