@@ -245,51 +245,34 @@
             return hexColor;
         }
 
-        
-
-        
-
         document.addEventListener('DOMContentLoaded', async () => {
-
             const showOverlayBtn = document.getElementById('show-overlay-btn');
             const closeOverlayBtn = document.getElementById('close-overlay-btn');
             const fullScreenOverlay = document.getElementById('full-screen-overlay');
-            
-
             showOverlayBtn.addEventListener('click', () => {
                 fullScreenOverlay.style.display = 'flex';
             });
-
             closeOverlayBtn.addEventListener('click', () => {
                 fullScreenOverlay.style.display = 'none';
             });
-
             const showOverlay2Btn = document.getElementById('show-overlay-2-btn');
             const closeOverlay2Btn = document.getElementById('close-overlay-2-btn');
             const fullScreenOverlay2 = document.getElementById('full-screen-overlay-2');
-
             showOverlay2Btn.addEventListener('click', () => {
                 fullScreenOverlay2.style.display = 'flex';
             });
-
             closeOverlay2Btn.addEventListener('click', () => {
                 fullScreenOverlay2.style.display = 'none';
             });
-
             const showLoadingBtn = document.getElementById('show-loading-btn');
             const closeLoadingBtn = document.getElementById('close-loading-btn');
             const LoadingOverlay = document.getElementById('loading-overlay');
-
             showLoadingBtn.addEventListener('click', () => {
                 LoadingOverlay.style.display = 'flex';
             });
-
             closeLoadingBtn.addEventListener('click', () => {
                 LoadingOverlay.style.display = 'none';
             });
-
-
-
             const response99 = await fetch("{% url 'get-map-settings' %}", {
                 method: "POST",
                 cache: "no-cache",
@@ -303,9 +286,6 @@
             challenge = result99["challenge"];
             accessibility = result99["accessibility"];
             autosave = result99["autosave"];
-
-
-
             window.reportIssue = async function(place_1, place_2, issue, toSelect){
                 const response3 = await fetch("{% url 'add-issue' %}", {
                     method: "POST",
@@ -317,11 +297,8 @@
                     body: JSON.stringify({"places": [place_1, place_2], "issue": issue}),
                 });
                 const result3 = await response3.json();
-                console.log(result3);
-
                 document.getElementById('close-overlay-2-btn').click();
                 document.getElementById('show-loading-btn').click();
-
                 for(var i=0;i<routes.length;i++){
                     let currRoute = routes[i];
                     currRoute.numIssues = 0;
@@ -417,8 +394,6 @@
                         }
                     }
                 }
-
-
                 document.getElementById('close-loading-btn').click();
                 displayRoutes(routes, true, toSelect);
             }
@@ -434,10 +409,8 @@
                     body: JSON.stringify({"places": [place_1, place_2], "good": good}),
                 });
                 const result3 = await response3.json();
-                console.log(result3);
                 document.getElementById('close-overlay-2-btn').click();
                 document.getElementById('show-loading-btn').click();
-
                 for(var i=0;i<routes.length;i++){
                     let currRoute = routes[i];
                     currRoute.numIssues = 0;
@@ -533,8 +506,6 @@
                         }
                     }
                 }
-
-
                 document.getElementById('close-loading-btn').click();
                 displayRoutes(routes, true, toSelect);
             }
@@ -547,22 +518,17 @@
                     google.maps.importLibrary("places"),
                     google.maps.importLibrary("geometry"),
                 ]);
-
                 directionsService = new google.maps.DirectionsService();
                 directionsRenderer = new google.maps.DirectionsRenderer();
-
                 map = new google.maps.Map(document.getElementById("map"), {
                     center: { lat: 40.749933, lng: -73.98633 },
                     zoom: 13,
                     mapId: "4504f8b37365c3d0",
                     mapTypeControl: false,
                 });
-
                 directionsRenderer.setMap(map);
-
                 const card = document.getElementById("route-info");
                 map.controls[google.maps.ControlPosition.TOP_CENTER].push(card);
-
                 const place1Autocomplete = new google.maps.places.PlaceAutocompleteElement();
                 place1Autocomplete.id = "place1-autocomplete-input";
                 document.getElementById("place-inputs").appendChild(place1Autocomplete);
@@ -581,13 +547,10 @@
                     origin = place.toJSON();
                     updateMapAndMarkers();
                 });
-
                 const destinationHeader = document.createElement('h6');
                 destinationHeader.style = "margin:0px;margin-left:30px;margin-top:30px;";
                 destinationHeader.innerHTML = `Destination&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ff0000;">&#11044;</span>`;
-
                 document.getElementById("place-inputs").appendChild(destinationHeader);
-
                 const place2Autocomplete = new google.maps.places.PlaceAutocompleteElement();
                 place2Autocomplete.id = "place2-autocomplete-input";
                 document.getElementById("place-inputs").appendChild(place2Autocomplete);
@@ -627,7 +590,6 @@
                     marker1.setIcon({path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: "#00ff00", fillOpacity: 1, strokeWeight: 0.8});
                     marker1.setMap(map);
                 }
-
                 if (destination && destination.location) {
                     isDestination = true;
                     let content2 =
@@ -644,8 +606,6 @@
                     marker2.setIcon({path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: "#ff0000", fillOpacity: 1, strokeWeight: 0.8});
                     marker2.setMap(map);
                 }
-
-                // Adjust the map to fit both markers if both places are selected.
                 if (isOrigin && isDestination) {
                     const bounds = new google.maps.LatLngBounds();
                     bounds.extend(origin.location);
@@ -677,9 +637,7 @@
                     alert("Please select two places to generate routes.");
                     return;
                 }
-
                 showLoadingBtn.click();
-
                 const response199 = await fetch("{% url 'get-map-settings' %}", {
                     method: "POST",
                     cache: "no-cache",
@@ -693,8 +651,6 @@
                 challenge = result199["challenge"];
                 accessibility = result199["accessibility"];
                 autosave = result199["autosave"];
-
-
                 let request = {
                     origin: origin.location,
                     destination: destination.location,
@@ -702,7 +658,6 @@
                     provideRouteAlternatives: true,
                     
                 };
-
                 directionsService.route(request, async function(result, status) {
                     if (status == 'OK') {
                         const response = await fetch("{% url 'save-route' %}", {
@@ -720,7 +675,6 @@
                         alert('Could not generate routes: ' + status);
                     }
                 });
-
             }
 
             document.getElementById("generate-routes").addEventListener('click', () => {
@@ -837,9 +791,7 @@
                         return x.numIssues - y.numIssues + 0.5*(y.numSuccesses - x.numSuccesses);
                     });
                 }
-                console.log(initialRouteList);
                 return initialRouteList;
-
             }
 
             async function displayRoutes(res, processed=false, toSelect=-1){
@@ -858,14 +810,12 @@
                             directions: res,
                             routeIndex: index,
                             polylineOptions: {
-                                strokeColor: generateHexColor(route.numIssues, route.totalSteps), // Highlight the best route in blue, others in grey
+                                strokeColor: generateHexColor(route.numIssues, route.totalSteps),
                                 strokeOpacity: 1,
                                 strokeWeight: 6,
                             },
-                            suppressMarkers: true, // Suppress the default markers
+                            suppressMarkers: true,
                         });
-
-                        // Store each renderer in the map's renderers array
                         map.directionsRenderers.push(renderer);
                     });
                 }
@@ -1251,6 +1201,9 @@
                 closeLoadingBtn.click();
                 document.getElementById("show-overlay-btn").click();
                 if(toSelect != -1){
+                    console.log(routeDivs[toSelect]);
+                    console.log(toSelect);
+                    console.log(routeDivs[toSelect].click);
                     routeDivs[toSelect].click();
                 }
             }
