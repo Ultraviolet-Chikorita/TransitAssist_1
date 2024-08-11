@@ -822,7 +822,6 @@
                 else{
                     routes = res;
                 }
-                console.log(routes);
                 routeDivs = [];
                 if(routes.length == 1){
                     let routeDiv = document.createElement('div');
@@ -1200,7 +1199,10 @@
                             stepDivs.push(stepDiv);
                         }
                         document.getElementById("full-screen-overlay").style.display = "none";
-                    })
+                    });
+                    if(toSelect == i){
+                        routeDivs[i].click();
+                    }
                 }
                 closeLoadingBtn.click();
                 document.getElementById("show-overlay-btn").click();
