@@ -1049,7 +1049,7 @@
                                         reportIssueButton.innerHTML = "Report Issue";
                                         reportIssueButton.dataset.place1 = currSubStep.ids[0];
                                         reportIssueButton.dataset.place2 = currSubStep.ids[1];
-                                        reportIssueButton.dataset.toSelect = i;
+                                        reportIssueButton.dataset.toSelect = routeId;
                                         reportIssueButton.addEventListener('mouseover', function(){
                                             this.style.backgroundColor = "rgba(67,37,179,1)";
                                             this.style.color = "rgba(237,165,58,1)";
@@ -1075,7 +1075,7 @@
                                         reportSuccessButton.innerHTML = "Report Success";
                                         reportSuccessButton.dataset.place1 = currSubStep.ids[0];
                                         reportSuccessButton.dataset.place2 = currSubStep.ids[1];
-                                        reportSuccessButton.dataset.toSelect = i;
+                                        reportSuccessButton.dataset.toSelect = routeId;
                                         reportSuccessButton.addEventListener('mouseover', function(){
                                             this.style.backgroundColor = "rgba(67,37,179,1)";
                                             this.style.color = "rgba(149,213,37,1)";
@@ -1159,7 +1159,7 @@
                                     reportIssueButton.style = "display:none;margin-right:10px; background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(237,165,58,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportIssueButton.innerHTML = "Report Issue";
                                     reportIssueButton.dataset.place1 = currStep.ids[k];
-                                    reportIssueButton.dataset.toSelect = i;
+                                    reportIssueButton.dataset.toSelect = routeId;
                                     reportIssueButton.addEventListener('mouseover', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,1)";
                                         this.style.color = "rgba(237,165,58,1)";
@@ -1183,7 +1183,7 @@
                                     reportSuccessButton.style = "display:none;background-color: rgba(67,37,179, 0.5);padding:6px;border-radius: 15px;color:rgba(149,213,37,0.5);border: 1px solid rgba(255,255,255,0.15);cursor:pointer;";
                                     reportSuccessButton.innerHTML = "Report Success";
                                     reportSuccessButton.dataset.place1 = currStep.ids[k];
-                                    reportSuccessButton.dataset.toSelect = i;
+                                    reportSuccessButton.dataset.toSelect = routeId;
                                     reportSuccessButton.addEventListener('mouseover', function(){
                                         this.style.backgroundColor = "rgba(67,37,179,1)";
                                         this.style.color = "rgba(149,213,37,1)";
