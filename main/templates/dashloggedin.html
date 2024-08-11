@@ -642,13 +642,7 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        if(data.status == "Fail"){
-                            document.getElementById("errorMessage").innerHTML = data.msg;
-                            document.getElementById("part-screen-overlay").style.display = "flex";
-                        }
-                        else{
-                            location.reload();
-                        }
+                        location.reload();
                     });
                 });
             }
@@ -844,7 +838,8 @@
                         if(data.status == "OK"){
                         }
                         else{
-                            alert("FAILED");
+                            document.getElementById("errorMessage").innerHTML = data.msg;
+                            document.getElementById("part-screen-overlay").style.display = "flex";
                         }
                     });
                 }
