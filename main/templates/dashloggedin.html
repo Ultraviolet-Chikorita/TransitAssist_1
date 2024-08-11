@@ -278,12 +278,20 @@
             outline-offset: max(2px, 0.15em);
         }
 
-        /* #account_content > div {
-            display: flex;
+        #part-screen-overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            justify-content: center;
+            height: 10vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-        } */
+            justify-content: center;
+            z-index: 1000;
+        }
 
     </style>
 </head>
@@ -575,6 +583,11 @@
             </div>
         </div>
     </div>
+    <div id="part-screen-overlay" style="display: none;">
+        <div style="width:fit-content;padding-left: 20px;padding-right: 20px;height:5vh;background-color: #c23b22;border-radius: 10px; border-bottom: 1px solid #FF5733;">
+            <b>Error: </b><span id="errorMessage"></span>
+        </div>
+    </div>
     <script>
 
         function handleCheckboxToggle(event) {
@@ -629,7 +642,13 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        location.reload();
+                        if(data.status == "Fail"){
+                            document.getElementById("errorMessage").innerHTML = data.msg;
+                            document.getElementById("part-screen-overlay").style.display = "flex";
+                        }
+                        else{
+                            location.reload();
+                        }
                     });
                 });
             }

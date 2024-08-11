@@ -51,28 +51,34 @@ def signup(request):
 
 def get_saved_routes(request):
     if request.method == "POST":
-        CustomUser = get_user_model()
-        user = CustomUser.objects.filter(id=request.user.id)[0]
-        savedRoutes = list(user.routes.filter(saved=True))
-        processedSavedRoutes = []
-        for route in savedRoutes:
-            processedSavedRoutes.append({"start": route.start, "end": route.end, "date": route.time.strftime("%d/%m/%Y")})
-        return JsonResponse({"status": "OK", "routes": processedSavedRoutes})
+        try:
+            CustomUser = get_user_model()
+            user = CustomUser.objects.filter(id=request.user.id)[0]
+            savedRoutes = list(user.routes.filter(saved=True))
+            processedSavedRoutes = []
+            for route in savedRoutes:
+                processedSavedRoutes.append({"start": route.start, "end": route.end, "date": route.time.strftime("%d/%m/%Y")})
+            return JsonResponse({"status": "OK", "routes": processedSavedRoutes})
+        except:
+            return JsonResponse({"Status": "Fail"})
 
 
 def update_user_details(request):
     if request.method == "POST":
-        data = json.load(request)
-        firstname = data.get("firstname")
-        lastname = data.get("lastname")
-        phone = PhoneNumber.from_string(data.get("phonenumber"))
-        CustomUser = get_user_model()
-        user = CustomUser.objects.filter(id=request.user.id)[0]
-        user.first_name = firstname
-        user.last_name = lastname
-        user.phone_number = phone
-        user.save()
-        return JsonResponse({"status": "OK"})
+        try:
+            data = json.load(request)
+            firstname = data.get("firstname")
+            lastname = data.get("lastname")
+            phone = PhoneNumber.from_string(data.get("phonenumber"))
+            CustomUser = get_user_model()
+            user = CustomUser.objects.filter(id=request.user.id)[0]
+            user.first_name = firstname
+            user.last_name = lastname
+            user.phone_number = phone
+            user.save()
+            return JsonResponse({"status": "OK"})
+        except Exception as e:
+            return JsonResponse({"status": "Fail", "msg": e})
 
 
 def check_completed_profile(request):
