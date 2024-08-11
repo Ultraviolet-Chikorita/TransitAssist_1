@@ -78,7 +78,10 @@ def update_user_details(request):
             user.save()
             return JsonResponse({"status": "OK"})
         except Exception as e:
-            return JsonResponse({"status": "Fail", "msg": str(e)})
+            errorMessage = str(e)
+            if errorMessage == "(0) Missing or invalid default region.":
+                errorMessage = "Phone number invalid, please use international format"
+            return JsonResponse({"status": "Fail", "msg": errorMessage})
 
 
 def check_completed_profile(request):
