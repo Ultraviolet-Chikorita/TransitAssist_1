@@ -819,6 +819,10 @@
                         map.directionsRenderers.push(renderer);
                     });
                 }
+                else{
+                    routes = res;
+                }
+                console.log(routes);
                 routeDivs = [];
                 if(routes.length == 1){
                     let routeDiv = document.createElement('div');
