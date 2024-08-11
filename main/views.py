@@ -78,7 +78,7 @@ def update_user_details(request):
             user.save()
             return JsonResponse({"status": "OK"})
         except Exception as e:
-            return JsonResponse({"status": "Fail", "msg": e})
+            return JsonResponse({"status": "Fail", "msg": str(e)})
 
 
 def check_completed_profile(request):
