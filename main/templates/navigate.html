@@ -221,6 +221,7 @@
         let directionsRenderer;
         let routeDivs = [];
         let routes = [];
+        let displayRoutes;
 
         function generateHexColor(x, y) {
             var hexColor = "#000000";
@@ -262,6 +263,8 @@
                 }
             }
 
+            document.getElementById('close-overlay-2-btn').click();
+            document.getElementById('show-loading-btn').click();
 
             for(var i=0;i<routes.length;i++){
                 let currRoute = routes[i];
@@ -368,7 +371,7 @@
             }
 
 
-            document.getElementById('close-overlay-2-btn').click();
+            document.getElementById('close-loading-btn').click();
             displayRoutes(routes, true);
         }
 
