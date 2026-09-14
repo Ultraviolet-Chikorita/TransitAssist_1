@@ -204,7 +204,7 @@
     <button id="show-loading-btn" style="display: none;"></button>
     <button id="close-loading-btn" style="display:none;"></button>
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyCbZ2QUNhC61wdGwvKkjyTV4M3KkEKtX_E", v: "beta"});</script>
+        ({key: "{{ GOOGLE_MAPS_API_KEY|escapejs }}", v: "beta"});</script>
     <script>
 
         let map;
@@ -557,8 +557,8 @@
                 marker2 = new google.maps.Marker({
                     map: map,
                     icon: {
-                        path: google.maps.SymbolPath.CIRCLE, // Set an initial path to avoid the default red pin
-                        scale: 0, // Make the initial path invisible
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 0,
                     },
                 });
                 infoWindow2 = new google.maps.InfoWindow({});
@@ -695,10 +695,10 @@
                             for(var k=0;k<currStep.steps.length;k++){
                                 let currPart = currStep.steps[k];
                                 currPart.ids = [];
-                                const response1 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.start_location.lat}&lon=${currPart.start_location.lng}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
+                                const response1 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.start_location.lat}&lon=${currPart.start_location.lng}&type=street&lang=en&limit=1&format=json&apiKey={{ GEOAPIFY_API_KEY|urlencode }}`);
                                 const result1 = await response1.json();
                                 currPart.ids.push(result1.results[0].place_id);
-                                const response2 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.end_location.lat}&lon=${currPart.end_location.lng}&type=street&lang=en&limit=1&format=json&apiKey=95be0cf25e324f7f998ceccffb5364c0`);
+                                const response2 = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${currPart.end_location.lat}&lon=${currPart.end_location.lng}&type=street&lang=en&limit=1&format=json&apiKey={{ GEOAPIFY_API_KEY|urlencode }}`);
                                 const result2 = await response2.json();
                                 currPart.ids.push(result2.results[0].place_id);
                                 const response3 = await fetch("{% url 'get-issues' %}", {
