@@ -2,11 +2,12 @@ from django.conf import settings
 
 
 def external_api_settings(_request):
-    """Expose public browser-side API configuration to templates.
+    """Expose browser-side map API configuration to templates.
 
-    Values still need provider-side origin/API restrictions because any browser
-    JavaScript key is visible to users by design.
+    Browser API keys are visible to users by design, so deployments must also
+    restrict them by allowed origins and enabled APIs at the provider level.
     """
     return {
         "GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY,
+        "GEOAPIFY_API_KEY": settings.GEOAPIFY_API_KEY,
     }
