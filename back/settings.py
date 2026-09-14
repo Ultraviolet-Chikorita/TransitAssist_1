@@ -129,7 +129,9 @@ SOCIAL_AUTH_GITHUB_SECRET = os.getenv("SOCIAL_AUTH_GITHUB_SECRET", "")
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 
 # Exposed to templates by main.context_processors.external_api_settings.
+# Browser-side API keys are public by design, so restrict them at the provider.
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
+GEOAPIFY_API_KEY = os.getenv("GEOAPIFY_API_KEY", "")
 
 SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_details",
